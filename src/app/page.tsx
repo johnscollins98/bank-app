@@ -39,7 +39,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     new URLSearchParams({ ...searchParams, offset: newOffset.toString() }).toString();
 
   return (
-    <main className="dark flex h-[100dvh] flex-col p-4 gap-4 overflow-hidden">
+    <main className="dark flex h-[100dvh] flex-col p-4 gap-4 overflow-hidden bg-slate-800 text-white">
       <div className="flex gap-2 items-center justify-between">
         {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
         <ButtonGroup>
