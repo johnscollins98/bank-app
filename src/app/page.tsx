@@ -57,8 +57,8 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   );
 
   return (
-    <main className="dark flex min-h-screen max-h-screen flex-col p-4 gap-4 overflow-hidden">
-      <div className="flex gap-2 items-center">
+    <main className="dark flex h-[100dvh] flex-col p-4 gap-4 overflow-hidden">
+      <div className="flex gap-2 items-center justify-between">
         {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
@@ -71,7 +71,9 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
             Next Month
           </Button>
         </ButtonGroup>
-        Balance: £ {balance.effectiveBalance.minorUnits / 100}
+      </div>
+      <div className='font-bold'>
+      Balance: £ {balance.effectiveBalance.minorUnits / 100}
       </div>
       <div className="flex gap-2 flex-wrap">
         <Link
@@ -79,7 +81,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
           passHref
         >
           <Chip
-            className="hover:bg-blue-600 transition-colors duration-25"
+            className="hover:bg-blue-600 transition-colors duration-25 text-xs"
             color={filterBy === '' ? 'primary' : 'default'}
           >
             <div className="flex gap-2">
@@ -103,7 +105,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
             >
               <Chip
                 color={key === filterBy ? 'primary' : 'default'}
-                className="hover:bg-blue-600 transition-colors duration-25"
+                className="hover:bg-blue-600 transition-colors duration-25 text-xs"
               >
                 <div className="flex gap-2">
                   <div className="capitalize">{key.replaceAll('_', ' ').toLocaleLowerCase()}</div>
@@ -120,7 +122,34 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
           ))}
       </div>
       <div className="flex flex-1 flex-col overflow-auto">
-        <TransactionTable feedItems={feedItems} />
+        {feedItems.map((feedItem) => (
+          <div key={feedItem.feedItemUid} className="p-3 border-t border-b border-gray-600">
+            <div className="flex justify-between">
+              <div className="font-bold">{feedItem.counterPartyName}</div>
+              <div className={`font-bold ${feedItem.direction === 'IN' && 'text-blue-400'}`}>
+                {feedItem.direction === 'IN' && '+'}£
+                {(feedItem.amount.minorUnits / 100).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </div>
+            </div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex gap-3">
+                <div className="capitalize font-bold">
+                  {feedItem.spendingCategory.replaceAll('_', ' ').toLowerCase()}
+                </div>
+                <div>{feedItem.reference}</div>
+              </div>
+              <div>
+                {new Date(feedItem.transactionTime).toLocaleDateString()},{' '}
+                {new Date(feedItem.transactionTime).toLocaleTimeString(undefined, {
+                  timeStyle: 'short',
+                })}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </main>
   );
