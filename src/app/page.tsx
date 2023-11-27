@@ -2,9 +2,9 @@ import { Starling } from '@/lib/starling-api-service';
 import { Button, ButtonGroup } from '@nextui-org/react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import Categories from './categories';
-import LoginForm from './login-form';
-import LogoutForm from './logout-form';
+import Categories from './_components/categories';
+import LoginForm from './_components/login-form';
+import LogoutForm from './_components/logout-form';
 
 function lastDayOfMonth(dayIndex: number, year: number, month: number) {
   var lastDay = new Date(year, month + 1, 0);
