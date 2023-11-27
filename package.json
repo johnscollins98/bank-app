@@ -12,6 +12,7 @@
     "@nextui-org/react": "^2.2.9",
     "framer-motion": "^10.16.5",
     "next": "14.0.1",
+    "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
     "starling-developer-sdk": "^1.0.3"

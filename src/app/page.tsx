@@ -1,6 +1,10 @@
 import { Starling } from '@/lib/starling-api-service';
 import { Button, ButtonGroup } from '@nextui-org/react';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 import Categories from './categories';
+import LoginForm from './login-form';
+import LogoutForm from './logout-form';
 
 function lastDayOfMonth(dayIndex: number, year: number, month: number) {
   var lastDay = new Date(year, month + 1, 0);
@@ -12,6 +16,16 @@ function lastDayOfMonth(dayIndex: number, year: number, month: number) {
 }
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
+  const session = await getServerSession();
+
+  if (!session) {
+    return <LoginForm />;
+  }
+
+  if (session?.user?.email !== process.env.EMAIL) {
+    redirect('/forbidden');
+  }
+
   const offset = parseInt(searchParams.offset ?? 0);
   const filterBy = searchParams.filterBy ?? '';
   const starling = new Starling();
@@ -39,7 +53,8 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     new URLSearchParams({ ...searchParams, offset: newOffset.toString() }).toString();
 
   return (
-    <main className="dark flex h-[100dvh] flex-col p-4 gap-4 overflow-hidden bg-slate-800 text-white">
+    <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
+      <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
         {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
         <ButtonGroup>
