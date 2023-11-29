@@ -49,7 +49,7 @@ export default function Categories({ searchParams, transactions }: Props) {
           </Link>
           {Object.keys(total)
             .filter((k) => k !== 'total')
-            .sort((a, b) => total[a] - total[b])
+            .toSorted((a, b) => total[a] - total[b])
             .map((key) => (
               <Link
                 passHref
