@@ -12,9 +12,11 @@ export class Starling {
   }
 
   async getTransactions(accountId: string, start: Date, end: Date): Promise<Transactions> {
+    const endOfDay = new Date(end);
+    endOfDay.setHours(23, 59, 59);
     const params = new URLSearchParams({
       minTransactionTimestamp: start.toISOString(),
-      maxTransactionTimestamp: end.toISOString(),
+      maxTransactionTimestamp: endOfDay.toISOString(),
     });
 
     return await this.fetch(
