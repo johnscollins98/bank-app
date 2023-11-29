@@ -47,7 +47,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const transactions = await starling.getTransactions(accountId, lastThursday, lastWednesday);
   const feedItems = transactions.feedItems.filter(
     (item) => filterBy === '' || item.spendingCategory === filterBy
-  ).reverse();
+  ).sort((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
 
   const createRedirectLink = (newOffset: number) =>
     new URLSearchParams({ ...searchParams, offset: newOffset.toString() }).toString();
