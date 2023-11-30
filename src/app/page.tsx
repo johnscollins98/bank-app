@@ -33,12 +33,18 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const accountId = accounts.accounts[0].accountUid;
 
   const date = new Date(Date.now());
+  date.setHours(0, 0, 0, 0);
 
   if (offset != 0) {
     date.setMonth(date.getMonth() + offset);
   }
 
-  const lastWednesday = lastDayOfMonth(3, date.getFullYear(), date.getMonth());
+  let lastWednesday = lastDayOfMonth(3, date.getFullYear(), date.getMonth());
+  if (lastWednesday < date) {
+    // To account for days in the month that are after the last Wednesday
+    date.setMonth(date.getMonth() + 1);
+    lastWednesday = lastDayOfMonth(3, date.getFullYear(), date.getMonth());
+  }
   date.setMonth(date.getMonth() - 1);
   const lastThursday = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
 
