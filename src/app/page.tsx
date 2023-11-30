@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Categories from './_components/categories';
 import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
+import Client from './_components/client';
 
 function lastDayOfMonth(dayIndex: number, year: number, month: number) {
   var lastDay = new Date(year, month + 1, 0);
@@ -51,9 +52,9 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const balance = await starling.getBalance(accountId);
 
   const transactions = await starling.getTransactions(accountId, lastThursday, lastWednesday);
-  const feedItems = transactions.feedItems.filter(
-    (item) => filterBy === '' || item.spendingCategory === filterBy
-  ).toSorted((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
+  const feedItems = transactions.feedItems
+    .filter((item) => filterBy === '' || item.spendingCategory === filterBy)
+    .toSorted((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
 
   const createRedirectLink = (newOffset: number) =>
     new URLSearchParams({ ...searchParams, offset: newOffset.toString() }).toString();
@@ -62,7 +63,9 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
       <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
-        {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
+        <Client>
+          {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
+        </Client>
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
             Previous Month
@@ -98,10 +101,12 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
                 <div>{feedItem.reference}</div>
               </div>
               <div>
-                {new Date(feedItem.transactionTime).toLocaleDateString()},{' '}
-                {new Date(feedItem.transactionTime).toLocaleTimeString(undefined, {
-                  timeStyle: 'short',
-                })}
+                <Client>
+                  {new Date(feedItem.transactionTime).toLocaleDateString()},{' '}
+                  {new Date(feedItem.transactionTime).toLocaleTimeString(undefined, {
+                    timeStyle: 'short',
+                  })}
+                </Client>
               </div>
             </div>
           </div>
