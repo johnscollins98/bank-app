@@ -3,9 +3,10 @@ import { Button, ButtonGroup } from '@nextui-org/react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import Categories from './_components/categories';
+import DateDisplay from './_components/date';
 import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
-import Client from './_components/client';
+import TimeDisplay from './_components/time';
 
 function lastDayOfMonth(dayIndex: number, year: number, month: number) {
   var lastDay = new Date(year, month + 1, 0);
@@ -63,9 +64,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
       <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
-        <Client>
-          {lastThursday.toLocaleDateString()} - {lastWednesday.toLocaleDateString()}
-        </Client>
+        <DateDisplay date={lastThursday} /> - {<DateDisplay date={lastWednesday} />}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
             Previous Month
@@ -101,12 +100,8 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
                 <div>{feedItem.reference}</div>
               </div>
               <div>
-                <Client>
-                  {new Date(feedItem.transactionTime).toLocaleDateString()},{' '}
-                  {new Date(feedItem.transactionTime).toLocaleTimeString(undefined, {
-                    timeStyle: 'short',
-                  })}
-                </Client>
+                <DateDisplay date={new Date(feedItem.transactionTime)} />,{' '}
+                <TimeDisplay date={new Date(feedItem.transactionTime)} />
               </div>
             </div>
           </div>
