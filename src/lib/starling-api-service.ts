@@ -11,7 +11,7 @@ export class Starling {
     return await this.fetch('accounts');
   }
 
-  async getTransactions(accountId: string, start: Date, end: Date): Promise<Transactions> {
+  async getTransactions(accountId: string, start: Date, end: Date, defaultCategory: string): Promise<Transactions> {
     const startOfDay = new Date(start);
     startOfDay.setHours(0, 0, 0);
 
@@ -23,7 +23,7 @@ export class Starling {
     });
 
     return await this.fetch(
-      `feed/account/${accountId}/settled-transactions-between?${params.toString()}`
+      `feed/account/${accountId}/category/${defaultCategory}/transactions-between?${params.toString()}`
     );
   }
 

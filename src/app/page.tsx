@@ -33,6 +33,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const starling = new Starling();
   const accounts = await starling.getAccounts();
   const accountId = accounts.accounts[0].accountUid;
+  const defaultCategory = accounts.accounts[0].defaultCategory;
 
   const date = new Date(Date.now());
   date.setHours(0, 0, 0, 0);
@@ -55,7 +56,12 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
 
   const balance = await starling.getBalance(accountId);
 
-  const transactions = await starling.getTransactions(accountId, lastThursdayPreviousMonth, dayBeforeLastThursdayThisMonth);
+  const transactions = await starling.getTransactions(
+    accountId, 
+    lastThursdayPreviousMonth, 
+    dayBeforeLastThursdayThisMonth,
+    defaultCategory
+  );
   const feedItems = transactions.feedItems
     .filter((item) => filterBy === '' || item.spendingCategory === filterBy)
     .toSorted((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
