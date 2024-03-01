@@ -41,18 +41,21 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     date.setMonth(date.getMonth() + offset);
   }
 
-  let lastWednesday = lastDayOfMonth(3, date.getFullYear(), date.getMonth());
-  if (lastWednesday < date) {
+  let lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
+  if (lastThursdayThisMonth < date) {
     // To account for days in the month that are after the last Wednesday
     date.setMonth(date.getMonth() + 1);
-    lastWednesday = lastDayOfMonth(3, date.getFullYear(), date.getMonth());
+    lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
   }
+  const dayBeforeLastThursdayThisMonth = new Date(lastThursdayThisMonth)
+  dayBeforeLastThursdayThisMonth.setDate(lastThursdayThisMonth.getDate() - 1);
+
   date.setMonth(date.getMonth() - 1);
-  const lastThursday = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
+  const lastThursdayPreviousMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
 
   const balance = await starling.getBalance(accountId);
 
-  const transactions = await starling.getTransactions(accountId, lastThursday, lastWednesday);
+  const transactions = await starling.getTransactions(accountId, lastThursdayPreviousMonth, dayBeforeLastThursdayThisMonth);
   const feedItems = transactions.feedItems
     .filter((item) => filterBy === '' || item.spendingCategory === filterBy)
     .toSorted((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
@@ -64,7 +67,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
       <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
-        <DateDisplay date={lastThursday} /> - {<DateDisplay date={lastWednesday} />}
+        <DateDisplay date={lastThursdayPreviousMonth} /> - {<DateDisplay date={dayBeforeLastThursdayThisMonth} />}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
             Previous Month
