@@ -36,10 +36,8 @@ export class Starling {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
       },
-      ...options,
-      next: {
-        revalidate: 600,
-      },
+      cache: 'no-store',
+      ...options
     });
 
     if (!response.ok) {
