@@ -43,7 +43,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   }
 
   let lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
-  if (lastThursdayThisMonth < date) {
+  if (lastThursdayThisMonth <= date) {
     // To account for days in the month that are after the last Wednesday
     date.setMonth(date.getMonth() + 1);
     lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
