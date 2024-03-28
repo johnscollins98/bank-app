@@ -23,6 +23,7 @@ export interface Transactions {
     transactionTime: string;
     amount: SignedCurrencyAndAmount;
     direction: 'IN' | 'OUT';
+    status: 'UPCOMING' | 'UPCOMING_CANCELLED' | 'PENDING' | 'REVERSED' | 'SETTLED' | 'DECLINED' | 'REFUNDED' | 'RETRYING' | 'ACCOUNT_CHECK'
   }[];
 }
 

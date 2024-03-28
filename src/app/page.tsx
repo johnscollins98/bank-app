@@ -62,7 +62,8 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     dayBeforeLastThursdayThisMonth,
     defaultCategory
   );
-  const feedItems = transactions.feedItems
+  const transactionsWithoutUpcoming = transactions.feedItems.filter(i => i.status !== 'UPCOMING');
+  const feedItems = transactionsWithoutUpcoming
     .filter((item) => filterBy === '' || item.spendingCategory === filterBy)
     .toSorted((a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime));
 
@@ -87,7 +88,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
         </ButtonGroup>
       </div>
       <div className="font-bold">Balance: £ {balance.effectiveBalance.minorUnits / 100}</div>
-      <Categories searchParams={searchParams} transactions={transactions} />
+      <Categories searchParams={searchParams} transactions={transactionsWithoutUpcoming} />
       <div className="flex flex-1 flex-col overflow-auto">
         {feedItems.map((feedItem) => (
           <div key={feedItem.feedItemUid} className="p-3 border-t border-b border-gray-600">

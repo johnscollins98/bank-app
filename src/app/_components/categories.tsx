@@ -6,13 +6,13 @@ import Link from 'next/link';
 
 interface Props {
   searchParams: Record<string, string>;
-  transactions: Transactions;
+  transactions: Transactions['feedItems'];
 }
 
 export default function Categories({ searchParams, transactions }: Props) {
   const { filterBy } = searchParams;
 
-  const total = transactions.feedItems.reduce(
+  const total = transactions.reduce(
     (total, transaction) => {
       const value =
         transaction.direction === 'IN'
