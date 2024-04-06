@@ -7,15 +7,7 @@ import DateDisplay from './_components/date';
 import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
 import TimeDisplay from './_components/time';
-
-function lastDayOfMonth(dayIndex: number, year: number, month: number) {
-  var lastDay = new Date(year, month + 1, 0);
-  if (lastDay.getDay() < dayIndex) {
-    lastDay.setDate(lastDay.getDate() - 7);
-  }
-  lastDay.setDate(lastDay.getDate() - (lastDay.getDay() - dayIndex));
-  return lastDay;
-}
+import { getStartAndEndOfMonth } from '@/lib/date-range';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
   const session = await getServerSession();
@@ -24,13 +16,26 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     return <LoginForm />;
   }
 
-  if (session?.user?.email !== process.env.EMAIL) {
+  if (!process.env.EMAIL || !process.env.EMAIL_2) {
+    throw new Error("Email addresses not defined");
+  }
+
+  if (!process.env.API_TOKEN || !process.env.API_TOKEN_2) {
+    throw new Error("Api tokens not defined");
+  }
+
+  const email = session.user?.email;
+  if (!email) {
+    redirect('/forbidden');
+  }
+
+  if (email !== process.env.EMAIL && email !== process.env.EMAIL_2) {
     redirect('/forbidden');
   }
 
   const offset = parseInt(searchParams.offset ?? 0);
   const filterBy = searchParams.filterBy ?? '';
-  const starling = new Starling();
+  const starling = new Starling(email === process.env.EMAIL ? process.env.API_TOKEN : process.env.API_TOKEN_2);
   const accounts = await starling.getAccounts();
   const accountId = accounts.accounts[0].accountUid;
   const defaultCategory = accounts.accounts[0].defaultCategory;
@@ -42,24 +47,14 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     date.setMonth(date.getMonth() + offset);
   }
 
-  let lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
-  if (lastThursdayThisMonth <= date) {
-    // To account for days in the month that are after the last Wednesday
-    date.setMonth(date.getMonth() + 1);
-    lastThursdayThisMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
-  }
-  const dayBeforeLastThursdayThisMonth = new Date(lastThursdayThisMonth)
-  dayBeforeLastThursdayThisMonth.setDate(lastThursdayThisMonth.getDate() - 1);
-
-  date.setMonth(date.getMonth() - 1);
-  const lastThursdayPreviousMonth = lastDayOfMonth(4, date.getFullYear(), date.getMonth());
+  const { start, end } = getStartAndEndOfMonth(email, date)
 
   const balance = await starling.getBalance(accountId);
 
   const transactions = await starling.getTransactions(
     accountId, 
-    lastThursdayPreviousMonth, 
-    dayBeforeLastThursdayThisMonth,
+    start, 
+    end,
     defaultCategory
   );
   const transactionsWithoutUpcoming = transactions.feedItems.filter(i => i.status !== 'UPCOMING');
@@ -74,7 +69,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
       <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
-        <DateDisplay date={lastThursdayPreviousMonth} /> - {<DateDisplay date={dayBeforeLastThursdayThisMonth} />}
+        <DateDisplay date={start} /> - {<DateDisplay date={end} />}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
             Previous Month

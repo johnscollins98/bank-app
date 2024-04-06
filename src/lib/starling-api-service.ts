@@ -1,10 +1,7 @@
 import { Accounts, Balance, Transactions } from './starling-types';
 
 export class Starling {
-  private readonly apiKey: string;
-
-  constructor() {
-    this.apiKey = process.env.API_TOKEN as string;
+  constructor(private readonly apiKey: string) {
   }
 
   async getAccounts(): Promise<Accounts> {
