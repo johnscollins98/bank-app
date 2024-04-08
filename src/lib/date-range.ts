@@ -1,15 +1,17 @@
+import { Account } from './accounts';
+
 export interface StartAndEndDate {
   start: Date;
   end: Date;
 }
 
-export function getStartAndEndOfMonth(email: string, month: Date): StartAndEndDate {
-  if (email === process.env.EMAIL) {
-    return getBasedOnLastPayDay(month, 4);
+export function getStartAndEndOfMonth(date: Date, monthBarrier: Account["monthBarrier"], day: number): StartAndEndDate {
+  if (monthBarrier === 'last') {
+    return getBasedOnLastPayDay(date, day);
   } 
 
-  if (email === process.env.EMAIL_2) {
-    return getBasedOnCalendar(month);
+  if (monthBarrier === 'calendar') {
+    return getBasedOnCalendar(date);
   }
 
   throw new Error("Unrecognised email");

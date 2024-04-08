@@ -8,6 +8,7 @@ import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
 import TimeDisplay from './_components/time';
 import { getStartAndEndOfMonth } from '@/lib/date-range';
+import { Account } from '@/lib/accounts';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
   const session = await getServerSession();
@@ -16,26 +17,25 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     return <LoginForm />;
   }
 
-  if (!process.env.EMAIL || !process.env.EMAIL_2) {
-    throw new Error("Email addresses not defined");
-  }
-
-  if (!process.env.API_TOKEN || !process.env.API_TOKEN_2) {
-    throw new Error("Api tokens not defined");
-  }
-
   const email = session.user?.email;
   if (!email) {
     redirect('/forbidden');
   }
+  
+  if (!process.env.ACCOUNTS) {
+    throw new Error("Accounts not defined");
+  }
 
-  if (email !== process.env.EMAIL && email !== process.env.EMAIL_2) {
+  const localAccounts: Account[] = JSON.parse(process.env.ACCOUNTS);
+  const localAccount = localAccounts.find(a => a.email === email);
+
+  if (!localAccount) {
     redirect('/forbidden');
   }
 
   const offset = parseInt(searchParams.offset ?? 0);
   const filterBy = searchParams.filterBy ?? '';
-  const starling = new Starling(email === process.env.EMAIL ? process.env.API_TOKEN : process.env.API_TOKEN_2);
+  const starling = new Starling(localAccount.apiToken);
   const accounts = await starling.getAccounts();
   const accountId = accounts.accounts[0].accountUid;
   const defaultCategory = accounts.accounts[0].defaultCategory;
@@ -47,7 +47,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
     date.setMonth(date.getMonth() + offset);
   }
 
-  const { start, end } = getStartAndEndOfMonth(email, date)
+  const { start, end } = getStartAndEndOfMonth(date, localAccount.monthBarrier, localAccount.day)
 
   const balance = await starling.getBalance(accountId);
 
