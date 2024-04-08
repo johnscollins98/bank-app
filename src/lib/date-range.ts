@@ -11,7 +11,7 @@ export function getStartAndEndOfMonth(date: Date, monthBarrier: Account["monthBa
   } 
 
   if (monthBarrier === 'calendar') {
-    return getBasedOnCalendar(date);
+    return getBasedOnCalendar(date, day);
   }
 
   throw new Error("Unrecognised email");
@@ -36,10 +36,10 @@ function getBasedOnLastPayDay(date: Date, dayOfWeek: number): StartAndEndDate {
   }
 }
 
-function getBasedOnCalendar(month: Date): StartAndEndDate {
+function getBasedOnCalendar(month: Date, day: number): StartAndEndDate {
   return {
-    start: new Date(month.getFullYear(), month.getMonth(), 1),
-    end: new Date(month.getFullYear(), month.getMonth() + 1, 0)
+    start: new Date(month.getFullYear(), month.getMonth(), day),
+    end: new Date(month.getFullYear(), month.getMonth() + 1, day - 1)
   }
 }
 
