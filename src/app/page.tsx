@@ -8,9 +8,19 @@ import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
 import TimeDisplay from './_components/time';
 import { getStartAndEndOfMonth } from '@/lib/date-range';
-import { Account } from '@/lib/accounts';
+import { Account, assertIsAccounts } from '@/lib/accounts';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
+  if (!process.env.ACCOUNTS) {
+    throw new Error("Accounts not defined");
+  }
+
+  const localAccounts: unknown = JSON.parse(process.env.ACCOUNTS);
+  if (!assertIsAccounts(localAccounts)) {
+    // unlikely to actually get here as assertIsAccount throws it's own errors
+    throw new Error("Accounts is not valid");
+  }
+  
   const session = await getServerSession();
 
   if (!session) {
@@ -21,12 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   if (!email) {
     redirect('/forbidden');
   }
-  
-  if (!process.env.ACCOUNTS) {
-    throw new Error("Accounts not defined");
-  }
 
-  const localAccounts: Account[] = JSON.parse(process.env.ACCOUNTS);
   const localAccount = localAccounts.find(a => a.email === email);
 
   if (!localAccount) {
