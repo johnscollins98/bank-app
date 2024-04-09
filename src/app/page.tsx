@@ -8,18 +8,10 @@ import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
 import TimeDisplay from './_components/time';
 import { getStartAndEndOfMonth } from '@/lib/date-range';
-import { isAccounts } from '@/lib/accounts';
+import { getAccounts } from '@/lib/accounts';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
-  if (!process.env.ACCOUNTS) {
-    throw new Error("Accounts not defined");
-  }
-
-  const localAccounts: unknown = JSON.parse(process.env.ACCOUNTS);
-  if (!isAccounts(localAccounts)) {
-    // unlikely to actually get here as assertIsAccount throws it's own errors
-    throw new Error("Accounts is not valid");
-  }
+  const localAccounts = getAccounts();
   
   const session = await getServerSession();
 

@@ -18,7 +18,8 @@
     "next-auth": "^4.24.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "starling-developer-sdk": "^1.0.3"
+    "starling-developer-sdk": "^1.0.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.4",
