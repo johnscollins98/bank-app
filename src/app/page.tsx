@@ -1,41 +1,25 @@
-import { Starling } from '@/lib/starling-api-service';
+import { getStartAndEndOfMonth } from '@/lib/date-range';
+import getUserAccount from '@/lib/user';
 import { Button, ButtonGroup } from '@nextui-org/react';
 import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 import Categories from './_components/categories';
 import DateDisplay from './_components/date';
+import FeedEntry from './_components/feed-entry';
 import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
-import TimeDisplay from './_components/time';
-import { getStartAndEndOfMonth } from '@/lib/date-range';
-import { getAccounts } from '@/lib/accounts';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
-  const localAccounts = getAccounts();
   
   const session = await getServerSession();
-
+  
   if (!session) {
     return <LoginForm />;
   }
-
-  const email = session.user?.email;
-  if (!email) {
-    redirect('/forbidden');
-  }
-
-  const localAccount = localAccounts.find(a => a.email === email);
-
-  if (!localAccount) {
-    redirect('/forbidden');
-  }
+  
+  const { starling, accountId, localAccount, defaultCategory } = await getUserAccount(session);
 
   const offset = parseInt(searchParams.offset ?? 0);
   const filterBy = searchParams.filterBy ?? '';
-  const starling = new Starling(localAccount.apiToken);
-  const accounts = await starling.getAccounts();
-  const accountId = accounts.accounts[0].accountUid;
-  const defaultCategory = accounts.accounts[0].defaultCategory;
 
   const date = new Date(Date.now());
   date.setHours(0, 0, 0, 0);
@@ -83,30 +67,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
       <Categories searchParams={searchParams} transactions={transactionsWithoutUpcoming} />
       <div className="flex flex-1 flex-col overflow-auto">
         {feedItems.map((feedItem) => (
-          <div key={feedItem.feedItemUid} className="p-3 border-t border-b border-gray-600">
-            <div className="flex justify-between">
-              <div className="font-bold">{feedItem.counterPartyName}</div>
-              <div className={`font-bold ${feedItem.direction === 'IN' && 'text-blue-400'}`}>
-                {feedItem.direction === 'IN' && '+'}£
-                {(feedItem.amount.minorUnits / 100).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </div>
-            </div>
-            <div className="flex justify-between text-xs text-gray-400">
-              <div className="flex gap-3">
-                <div className="capitalize font-bold">
-                  {feedItem.spendingCategory.replaceAll('_', ' ').toLowerCase()}
-                </div>
-                <div>{feedItem.reference}</div>
-              </div>
-              <div>
-                <DateDisplay date={new Date(feedItem.transactionTime)} />,{' '}
-                <TimeDisplay date={new Date(feedItem.transactionTime)} />
-              </div>
-            </div>
-          </div>
+          <FeedEntry key={feedItem.feedItemUid} feedItem={feedItem} />
         ))}
       </div>
     </main>

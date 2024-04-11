@@ -1,4 +1,5 @@
-import { Accounts, Balance, Transactions } from './starling-types';
+import axios, { AxiosRequestConfig } from 'axios';
+import { Accounts, Balance, SpendingCategory, Transactions } from './starling-types';
 
 export class Starling {
   constructor(private readonly apiKey: string) {
@@ -28,21 +29,31 @@ export class Starling {
     return await this.fetch(`accounts/${accountId}/balance`);
   }
 
-  private async fetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(`https://api.starlingbank.com/api/v2/${endpoint}`, {
+  async setCategory(accountId: string, defaultCategory: string, transactionId: string, category: SpendingCategory): Promise<void> {
+    return await this.fetch(`feed/account/${accountId}/category/${defaultCategory}/${transactionId}/spending-category`, {
+      method: 'PUT',
+      data: { 
+        spendingCategory: category,
+        permanentSpendingCategoryUpdate: false,
+        previousSpendingCategoryReferencesUpdate: false
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  private async fetch<TIn, TOut>(endpoint: string, options: AxiosRequestConfig<TIn> = {}): Promise<TOut> {
+    const response = await axios({
+      ...options,
+      url: `https://api.starlingbank.com/api/v2/${endpoint}`,
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
+        'Cache-Control': 'no-cache',
+        ...options.headers
       },
-      cache: 'no-store',
-      ...options
     });
 
-    if (!response.ok) {
-      throw response.status;
-    }
-
-    const data = await response.json();
-
-    return data as T;
+    return response.data
   }
 }
