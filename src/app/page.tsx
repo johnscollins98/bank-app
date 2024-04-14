@@ -7,6 +7,7 @@ import DateDisplay from './_components/date';
 import FeedEntry from './_components/feed-entry';
 import LoginForm from './_components/login-form';
 import LogoutForm from './_components/logout-form';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string> }) {
   
@@ -53,13 +54,13 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
-            Previous Month
+            <FaArrowLeft />
           </Button>
           <Button size="sm" as="a" href={`.?${createRedirectLink(0)}`}>
             Today
           </Button>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset + 1)}`}>
-            Next Month
+            <FaArrowRight />
           </Button>
         </ButtonGroup>
       </div>
