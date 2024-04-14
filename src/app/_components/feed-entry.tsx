@@ -56,7 +56,7 @@ export default function FeedEntry({ feedItem }: Props) {
       <DropdownMenu className="max-h-[50vh] overflow-auto" aria-label="category-menu">
         <DropdownSection title="Choose new category">
           {SPENDING_CATEGORIES.map((c) => (
-            <DropdownItem className="capitalize p-3" key={c} onClick={() => updateCategoryHandler(c)}>
+            <DropdownItem className="capitalize p-5 sm:p-2" key={c} onClick={() => updateCategoryHandler(c)}>
               {c.replaceAll('_', ' ').toLocaleLowerCase()}
             </DropdownItem>
           ))}
