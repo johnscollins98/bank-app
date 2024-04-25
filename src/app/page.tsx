@@ -25,11 +25,7 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const date = new Date(Date.now());
   date.setHours(0, 0, 0, 0);
 
-  if (offset != 0) {
-    date.setMonth(date.getMonth() + offset);
-  }
-
-  const { start, end } = getStartAndEndOfMonth(date, localAccount.monthBarrier, localAccount.day)
+  const { start, end } = getStartAndEndOfMonth(date, localAccount.monthBarrier, localAccount.day, offset)
 
   const balance = await starling.getBalance(accountId);
 
