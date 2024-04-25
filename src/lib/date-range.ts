@@ -21,14 +21,13 @@ function getBasedOnLastPayDay(date: Date, dayOfWeek: number, offset: number): St
   let firstDayNextMonth = lastDayOfMonth(dayOfWeek, date.getFullYear(), date.getMonth());
   if (firstDayNextMonth <= date) {
     // To account for days in the month that are after the last Wednesday
-    date.setMonth(date.getMonth() + 1);
+    date.setDate(date.getDate() + 7);
     firstDayNextMonth = lastDayOfMonth(dayOfWeek, date.getFullYear(), date.getMonth());
   }
   const lastDayThisMonth = new Date(firstDayNextMonth)
   lastDayThisMonth.setDate(firstDayNextMonth.getDate() - 1);
 
-  date.setMonth(date.getMonth() - 1);
-  const lastDayPreviousMonth = lastDayOfMonth(dayOfWeek, date.getFullYear(), date.getMonth());
+  const lastDayPreviousMonth = lastDayOfMonth(dayOfWeek, date.getFullYear(), date.getMonth() - 1);
 
   if (offset === 0) {
     return {
