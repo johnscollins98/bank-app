@@ -60,9 +60,9 @@ export default async function Home({
     }).toString();
 
   return (
-    <main className="flex flex-1 flex-col p-4 gap-4 h-[100dvh] overflow-hidden">
+    <main className="flex h-[100dvh] flex-1 flex-col gap-4 overflow-hidden p-4">
       <LogoutForm session={session} />
-      <div className="flex gap-2 items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
         <ButtonGroup>
           <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>

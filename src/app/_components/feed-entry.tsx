@@ -25,7 +25,7 @@ interface Props {
 export default function FeedEntry({ feedItem }: Props) {
   const [optimisticFeedItem, updateOptimisticFeedItem] = useOptimistic(
     feedItem,
-    (_state, newFeedItem: typeof feedItem) => newFeedItem
+    (_state, newFeedItem: typeof feedItem) => newFeedItem,
   );
 
   const updateCategoryHandler = async (c: SpendingCategory) => {
@@ -40,7 +40,7 @@ export default function FeedEntry({ feedItem }: Props) {
     <>
       <div
         onClick={() => setModalOpen(true)}
-        className="p-3 border-t border-b border-foreground-200 hover:bg-foreground-50 transition-colors duration-100 cursor-pointer"
+        className="cursor-pointer border-b border-t border-foreground-200 p-3 transition-colors duration-100 hover:bg-foreground-50"
       >
         <div className="flex justify-between">
           <div className="font-bold">{optimisticFeedItem.counterPartyName}</div>
@@ -56,13 +56,13 @@ export default function FeedEntry({ feedItem }: Props) {
               {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
-              }
+              },
             )}
           </div>
         </div>
         <div className="flex justify-between text-xs text-foreground-500">
           <div className="flex gap-3">
-            <div className="capitalize font-bold">
+            <div className="font-bold capitalize">
               {optimisticFeedItem.spendingCategory
                 .replaceAll("_", " ")
                 .toLowerCase()}
@@ -97,10 +97,10 @@ export default function FeedEntry({ feedItem }: Props) {
               {SPENDING_CATEGORIES.filter((c) =>
                 c
                   .toLocaleLowerCase()
-                  .includes(categoryFilter.toLocaleLowerCase())
+                  .includes(categoryFilter.toLocaleLowerCase()),
               ).map((c) => (
                 <Button
-                  className="capitalize my-1"
+                  className="my-1 capitalize"
                   variant="light"
                   fullWidth
                   key={c}

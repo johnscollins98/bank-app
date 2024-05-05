@@ -32,7 +32,7 @@ export default function Categories({ searchParams, transactions }: Props) {
   return (
     <Accordion>
       <AccordionItem title="Spending Summary">
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           <Link
             href={`.?${new URLSearchParams({
               ...searchParams,
@@ -41,7 +41,7 @@ export default function Categories({ searchParams, transactions }: Props) {
             passHref
           >
             <Chip
-              className="hover:bg-blue-600 hover:text-white transition-colors duration-25 text-xs"
+              className="duration-25 text-xs transition-colors hover:bg-blue-600 hover:text-white"
               color={filterBy === "" ? "primary" : "default"}
             >
               <div className="flex gap-2">
@@ -65,7 +65,7 @@ export default function Categories({ searchParams, transactions }: Props) {
               >
                 <Chip
                   color={key === filterBy ? "primary" : "default"}
-                  className="hover:bg-blue-600 hover:text-white transition-colors duration-25 text-xs"
+                  className="duration-25 text-xs transition-colors hover:bg-blue-600 hover:text-white"
                 >
                   <div className="flex gap-2">
                     <div className="capitalize">

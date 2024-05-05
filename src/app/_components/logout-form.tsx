@@ -7,7 +7,7 @@ import { MdLogout } from "react-icons/md";
 
 export default function LogoutForm({ session }: { session: Session }) {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex items-center justify-between">
       Hello, {session.user?.name?.split(" ")[0]}
       <Button size="sm" onClick={() => signOut()}>
         <MdLogout />

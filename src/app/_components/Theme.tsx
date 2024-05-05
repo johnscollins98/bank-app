@@ -6,7 +6,7 @@ import { PropsWithChildren } from "react";
 export const Theme = ({ children }: PropsWithChildren) => {
   const { systemTheme } = useTheme();
   return (
-    <div className={`${systemTheme} text-foreground bg-background`}>
+    <div className={`${systemTheme} bg-background text-foreground`}>
       {children}
     </div>
   );
