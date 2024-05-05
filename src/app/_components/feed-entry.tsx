@@ -33,15 +33,18 @@ export default function FeedEntry({ feedItem }: Props) {
   };
 
   return (
-    <Dropdown className="dark">
+    <Dropdown>
       <DropdownTrigger>
-        <div className="p-3 border-t border-b border-gray-600">
+        <div className="p-3 border-t border-b border-foreground-200">
           <div className="flex justify-between">
             <div className="font-bold">
               {optimisticFeedItem.counterPartyName}
             </div>
             <div
-              className={`font-bold ${optimisticFeedItem.direction === "IN" && "text-blue-400"}`}
+              className={`font-bold ${
+                optimisticFeedItem.direction === "IN" &&
+                "text-blue-600 dark:text-blue-400"
+              }`}
             >
               {optimisticFeedItem.direction === "IN" && "+"}£
               {(optimisticFeedItem.amount.minorUnits / 100).toLocaleString(
@@ -49,11 +52,11 @@ export default function FeedEntry({ feedItem }: Props) {
                 {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                },
+                }
               )}
             </div>
           </div>
-          <div className="flex justify-between text-xs text-gray-400">
+          <div className="flex justify-between text-xs text-foreground-500">
             <div className="flex gap-3">
               <div className="capitalize font-bold">
                 {optimisticFeedItem.spendingCategory

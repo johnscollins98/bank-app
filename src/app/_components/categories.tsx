@@ -34,11 +34,14 @@ export default function Categories({ searchParams, transactions }: Props) {
       <AccordionItem title="Spending Summary">
         <div className="flex gap-2 flex-wrap">
           <Link
-            href={`.?${new URLSearchParams({ ...searchParams, filterBy: "" }).toString()}`}
+            href={`.?${new URLSearchParams({
+              ...searchParams,
+              filterBy: "",
+            }).toString()}`}
             passHref
           >
             <Chip
-              className="hover:bg-blue-600 transition-colors duration-25 text-xs"
+              className="hover:bg-blue-600 hover:text-white transition-colors duration-25 text-xs"
               color={filterBy === "" ? "primary" : "default"}
             >
               <div className="flex gap-2">
@@ -62,7 +65,7 @@ export default function Categories({ searchParams, transactions }: Props) {
               >
                 <Chip
                   color={key === filterBy ? "primary" : "default"}
-                  className="hover:bg-blue-600 transition-colors duration-25 text-xs"
+                  className="hover:bg-blue-600 hover:text-white transition-colors duration-25 text-xs"
                 >
                   <div className="flex gap-2">
                     <div className="capitalize">

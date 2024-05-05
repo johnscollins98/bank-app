@@ -60,7 +60,7 @@ export default async function Home({
     }).toString();
 
   return (
-    <main className="dark flex flex-1 flex-col p-4 gap-4 overflow-hidden">
+    <main className="flex flex-1 flex-col p-4 gap-4 h-[100dvh] overflow-hidden">
       <LogoutForm session={session} />
       <div className="flex gap-2 items-center justify-between">
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
