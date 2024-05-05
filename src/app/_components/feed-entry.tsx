@@ -28,13 +28,19 @@ export default function FeedEntry({ feedItem }: Props) {
     (_state, newFeedItem: typeof feedItem) => newFeedItem,
   );
 
-  const updateCategoryHandler = async (c: SpendingCategory) => {
-    updateOptimisticFeedItem({ ...feedItem, spendingCategory: c });
-    await setCategory(c, feedItem.feedItemUid);
-  };
-
   const [modalOpen, setModalOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState("");
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setCategoryFilter("");
+  };
+
+  const updateCategoryHandler = async (c: SpendingCategory) => {
+    updateOptimisticFeedItem({ ...feedItem, spendingCategory: c });
+    closeModal();
+    await setCategory(c, feedItem.feedItemUid);
+  };
 
   return (
     <>
@@ -77,10 +83,7 @@ export default function FeedEntry({ feedItem }: Props) {
       </div>
       <Modal
         isOpen={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          setCategoryFilter("");
-        }}
+        onClose={closeModal}
         scrollBehavior="inside"
         size="sm"
       >
