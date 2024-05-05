@@ -90,6 +90,7 @@ export default function FeedEntry({ feedItem }: Props) {
             <Input
               label="Filter"
               value={categoryFilter}
+              size="lg"
               onChange={(e) => setCategoryFilter(e.target.value)}
             />
             <div className="h-dvh max-h-72">
