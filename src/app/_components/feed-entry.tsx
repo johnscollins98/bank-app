@@ -89,7 +89,6 @@ export default function FeedEntry({ feedItem }: Props) {
           <ModalBody>
             <Input
               label="Filter"
-              autoFocus
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
             />
