@@ -1,15 +1,24 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { Accounts, Balance, SpendingCategory, Transactions } from './starling-types';
+import axios, { AxiosRequestConfig } from "axios";
+import {
+  Accounts,
+  Balance,
+  SpendingCategory,
+  Transactions,
+} from "./starling-types";
 
 export class Starling {
-  constructor(private readonly apiKey: string) {
-  }
+  constructor(private readonly apiKey: string) {}
 
   async getAccounts(): Promise<Accounts> {
-    return await this.fetch('accounts');
+    return await this.fetch("accounts");
   }
 
-  async getTransactions(accountId: string, start: Date, end: Date, defaultCategory: string): Promise<Transactions> {
+  async getTransactions(
+    accountId: string,
+    start: Date,
+    end: Date,
+    defaultCategory: string,
+  ): Promise<Transactions> {
     const startOfDay = new Date(start);
     startOfDay.setHours(0, 0, 0);
 
@@ -21,7 +30,7 @@ export class Starling {
     });
 
     return await this.fetch(
-      `feed/account/${accountId}/category/${defaultCategory}/transactions-between?${params.toString()}`
+      `feed/account/${accountId}/category/${defaultCategory}/transactions-between?${params.toString()}`,
     );
   }
 
@@ -29,31 +38,42 @@ export class Starling {
     return await this.fetch(`accounts/${accountId}/balance`);
   }
 
-  async setCategory(accountId: string, defaultCategory: string, transactionId: string, category: SpendingCategory): Promise<void> {
-    return await this.fetch(`feed/account/${accountId}/category/${defaultCategory}/${transactionId}/spending-category`, {
-      method: 'PUT',
-      data: { 
-        spendingCategory: category,
-        permanentSpendingCategoryUpdate: false,
-        previousSpendingCategoryReferencesUpdate: false
+  async setCategory(
+    accountId: string,
+    defaultCategory: string,
+    transactionId: string,
+    category: SpendingCategory,
+  ): Promise<void> {
+    return await this.fetch(
+      `feed/account/${accountId}/category/${defaultCategory}/${transactionId}/spending-category`,
+      {
+        method: "PUT",
+        data: {
+          spendingCategory: category,
+          permanentSpendingCategoryUpdate: false,
+          previousSpendingCategoryReferencesUpdate: false,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    );
   }
 
-  private async fetch<TIn, TOut>(endpoint: string, options: AxiosRequestConfig<TIn> = {}): Promise<TOut> {
+  private async fetch<TIn, TOut>(
+    endpoint: string,
+    options: AxiosRequestConfig<TIn> = {},
+  ): Promise<TOut> {
     const response = await axios({
       ...options,
       url: `https://api.starlingbank.com/api/v2/${endpoint}`,
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
-        'Cache-Control': 'no-cache',
-        ...options.headers
+        "Cache-Control": "no-cache",
+        ...options.headers,
       },
     });
 
-    return response.data
+    return response.data;
   }
 }

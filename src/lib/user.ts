@@ -1,19 +1,19 @@
-import { Session } from 'next-auth';
-import { redirect } from 'next/navigation';
-import { getAccounts } from './accounts';
-import { Starling } from './starling-api-service';
+import { Session } from "next-auth";
+import { redirect } from "next/navigation";
+import { getAccounts } from "./accounts";
+import { Starling } from "./starling-api-service";
 
 export default async function getUserAccount(session: Session) {
   const localAccounts = getAccounts();
   const email = session.user?.email;
   if (!email) {
-    redirect('/forbidden');
+    redirect("/forbidden");
   }
 
-  const localAccount = localAccounts.find(a => a.email === email);
+  const localAccount = localAccounts.find((a) => a.email === email);
 
   if (!localAccount) {
-    redirect('/forbidden');
+    redirect("/forbidden");
   }
 
   const starling = new Starling(localAccount.apiToken);
@@ -25,6 +25,6 @@ export default async function getUserAccount(session: Session) {
     starling,
     accountId,
     defaultCategory,
-    localAccount
-  }
+    localAccount,
+  };
 }
