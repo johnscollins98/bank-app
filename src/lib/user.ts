@@ -1,11 +1,24 @@
-import { Session } from "next-auth";
+"server-only";
+
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { getAccounts } from "./accounts";
 import { Starling } from "./starling-api-service";
 
-export default async function getUserAccount(session: Session) {
+const getUserAccount = cache(async () => {
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/login");
+  }
+
+  const { user } = session;
+  if (!user) {
+    redirect("/forbidden");
+  }
+
   const localAccounts = getAccounts();
-  const email = session.user?.email;
+  const { email } = user;
   if (!email) {
     redirect("/forbidden");
   }
@@ -22,9 +35,15 @@ export default async function getUserAccount(session: Session) {
   const defaultCategory = accounts.accounts[0].defaultCategory;
 
   return {
+    user,
     starling,
     accountId,
     defaultCategory,
     localAccount,
   };
-}
+});
+
+export type Context = Awaited<ReturnType<typeof getUserAccount>>;
+export type User = Context["user"];
+
+export default getUserAccount;

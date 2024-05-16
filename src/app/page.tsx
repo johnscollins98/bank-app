@@ -1,12 +1,10 @@
 import { getStartAndEndOfMonth } from "@/lib/date-range";
 import getUserAccount from "@/lib/user";
 import { Button, ButtonGroup } from "@nextui-org/react";
-import { getServerSession } from "next-auth";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import Categories from "./_components/categories";
 import DateDisplay from "./_components/date";
 import FeedEntry from "./_components/feed-entry";
-import LoginForm from "./_components/login-form";
 import LogoutForm from "./_components/logout-form";
 
 export default async function Home({
@@ -14,14 +12,8 @@ export default async function Home({
 }: {
   searchParams: Record<string, string>;
 }) {
-  const session = await getServerSession();
-
-  if (!session) {
-    return <LoginForm />;
-  }
-
-  const { starling, accountId, localAccount, defaultCategory } =
-    await getUserAccount(session);
+  const { user, starling, accountId, localAccount, defaultCategory } =
+    await getUserAccount();
 
   const offset = parseInt(searchParams.offset ?? 0);
   const filterBy = searchParams.filterBy ?? "";
@@ -61,7 +53,7 @@ export default async function Home({
 
   return (
     <main className="flex h-[100dvh] flex-1 flex-col gap-4 overflow-hidden p-4">
-      <LogoutForm session={session} />
+      <LogoutForm user={user} />
       <div className="flex items-center justify-between gap-2">
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
         <ButtonGroup>

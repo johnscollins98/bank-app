@@ -36,10 +36,10 @@ export default function FeedEntry({ feedItem }: Props) {
     setCategoryFilter("");
   };
 
-  const updateCategoryHandler = async (c: SpendingCategory) => {
-    updateOptimisticFeedItem({ ...feedItem, spendingCategory: c });
+  const updateCategoryHandler = async (category: SpendingCategory) => {
+    updateOptimisticFeedItem({ ...feedItem, spendingCategory: category });
     closeModal();
-    await setCategory(c, feedItem.feedItemUid);
+    await setCategory({ category, transactionId: feedItem.feedItemUid });
   };
 
   return (

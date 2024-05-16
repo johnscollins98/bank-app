@@ -1,25 +1,25 @@
 "use server";
 
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { SpendingCategory } from "../starling-types";
-import getUserAccount from "../user";
+import { z } from "zod";
+import { SPENDING_CATEGORIES } from "../starling-types";
+import { protectedAction } from "./utils";
 
-export default async function setCategory(
-  category: SpendingCategory,
-  transactionId: string,
-) {
-  const session = await getServerSession();
-  if (!session) redirect("/");
-  const { starling, accountId, defaultCategory } =
-    await getUserAccount(session);
+const setCategory = protectedAction(
+  z.object({
+    category: z.enum(SPENDING_CATEGORIES),
+    transactionId: z.string().uuid(),
+  }),
+  async ({ category, transactionId }, ctx) => {
+    const { starling, accountId, defaultCategory } = ctx;
+    await starling.setCategory(
+      accountId,
+      defaultCategory,
+      transactionId,
+      category,
+    );
+    revalidatePath("/");
+  },
+);
 
-  await starling.setCategory(
-    accountId,
-    defaultCategory,
-    transactionId,
-    category,
-  );
-  revalidatePath("/");
-}
+export default setCategory;
