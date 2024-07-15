@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from "axios";
 import {
   Accounts,
   Balance,
@@ -10,7 +9,8 @@ export class Starling {
   constructor(private readonly apiKey: string) {}
 
   async getAccounts(): Promise<Accounts> {
-    return await this.fetch("accounts");
+    const res = await this.fetch("accounts");
+    return res.json();
   }
 
   async getTransactions(
@@ -29,13 +29,15 @@ export class Starling {
       maxTransactionTimestamp: endOfDay.toISOString(),
     });
 
-    return await this.fetch(
+    const res = await this.fetch(
       `feed/account/${accountId}/category/${defaultCategory}/transactions-between?${params.toString()}`,
     );
+    return res.json();
   }
 
   async getBalance(accountId: string): Promise<Balance> {
-    return await this.fetch(`accounts/${accountId}/balance`);
+    const res = await this.fetch(`accounts/${accountId}/balance`);
+    return res.json();
   }
 
   async setCategory(
@@ -44,36 +46,42 @@ export class Starling {
     transactionId: string,
     category: SpendingCategory,
   ): Promise<void> {
-    return await this.fetch(
+    await this.fetch(
       `feed/account/${accountId}/category/${defaultCategory}/${transactionId}/spending-category`,
       {
+        spendingCategory: category,
+        permanentSpendingCategoryUpdate: false,
+        previousSpendingCategoryReferencesUpdate: false,
+      },
+      {
         method: "PUT",
-        data: {
-          spendingCategory: category,
-          permanentSpendingCategoryUpdate: false,
-          previousSpendingCategoryReferencesUpdate: false,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
       },
     );
   }
 
-  private async fetch<TIn, TOut>(
+  private async fetch<TIn>(
     endpoint: string,
-    options: AxiosRequestConfig<TIn> = {},
-  ): Promise<TOut> {
-    const response = await axios({
-      ...options,
-      url: `https://api.starlingbank.com/api/v2/${endpoint}`,
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        "Cache-Control": "no-cache",
-        ...options.headers,
+    body?: TIn,
+    options: RequestInit = {},
+  ): Promise<Response> {
+    const response = await fetch(
+      `https://api.starlingbank.com/api/v2/${endpoint}`,
+      {
+        ...options,
+        body: body && JSON.stringify(body),
+        next: { revalidate: 60 },
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
       },
-    });
+    );
 
-    return response.data;
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    return response;
   }
 }
