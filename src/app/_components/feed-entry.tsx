@@ -1,11 +1,7 @@
 "use client";
 
 import setCategory from "@/lib/actions/set-category";
-import {
-  SPENDING_CATEGORIES,
-  SpendingCategory,
-  Transactions,
-} from "@/lib/starling-types";
+import { SpendingCategory, Transactions } from "@/lib/starling-types";
 import {
   Button,
   Input,
@@ -20,9 +16,10 @@ import TimeDisplay from "./time";
 
 interface Props {
   feedItem: Transactions["feedItems"][number];
+  orderedCategories: SpendingCategory[];
 }
 
-export default function FeedEntry({ feedItem }: Props) {
+export default function FeedEntry({ feedItem, orderedCategories }: Props) {
   const [optimisticFeedItem, updateOptimisticFeedItem] = useOptimistic(
     feedItem,
     (_state, newFeedItem: typeof feedItem) => newFeedItem,
@@ -97,21 +94,23 @@ export default function FeedEntry({ feedItem }: Props) {
               onChange={(e) => setCategoryFilter(e.target.value)}
             />
             <div className="h-dvh max-h-72">
-              {SPENDING_CATEGORIES.filter((c) =>
-                c
-                  .toLocaleLowerCase()
-                  .includes(categoryFilter.toLocaleLowerCase()),
-              ).map((c) => (
-                <Button
-                  className="my-1 capitalize"
-                  variant="light"
-                  fullWidth
-                  key={c}
-                  onClick={() => updateCategoryHandler(c)}
-                >
-                  {c.replaceAll("_", " ").toLocaleLowerCase()}
-                </Button>
-              ))}
+              {orderedCategories
+                .filter((c) =>
+                  c
+                    .toLocaleLowerCase()
+                    .includes(categoryFilter.toLocaleLowerCase()),
+                )
+                .map((c) => (
+                  <Button
+                    className="my-1 capitalize"
+                    variant="light"
+                    fullWidth
+                    key={c}
+                    onClick={() => updateCategoryHandler(c)}
+                  >
+                    {c.replaceAll("_", " ").toLocaleLowerCase()}
+                  </Button>
+                ))}
             </div>
           </ModalBody>
         </ModalContent>

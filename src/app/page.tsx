@@ -1,4 +1,5 @@
 import { getStartAndEndOfMonth } from "@/lib/date-range";
+import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import getUserAccount from "@/lib/user";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
@@ -51,6 +52,8 @@ export default async function Home({
       offset: newOffset.toString(),
     }).toString();
 
+  const orderedCategories = orderCategoriesByPopularity(feedItems);
+
   return (
     <main className="flex h-[100dvh] flex-1 flex-col gap-4 overflow-hidden p-4">
       <LogoutForm user={user} />
@@ -77,7 +80,11 @@ export default async function Home({
       />
       <div className="flex flex-1 flex-col overflow-auto">
         {feedItems.map((feedItem) => (
-          <FeedEntry key={feedItem.feedItemUid} feedItem={feedItem} />
+          <FeedEntry
+            key={feedItem.feedItemUid}
+            feedItem={feedItem}
+            orderedCategories={orderedCategories}
+          />
         ))}
       </div>
     </main>
