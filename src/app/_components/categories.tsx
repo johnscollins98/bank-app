@@ -171,6 +171,7 @@ const CategoryChip = ({
             className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 100 ? "rounded-r-full" : ""} ${budgetColour}`}
             style={{
               width: `${Math.min(percentOfBudget, 100)}%`,
+              minWidth: percentOfBudget !== 0 ? "10px" : undefined,
               height: "100%",
             }}
           ></div>
