@@ -99,6 +99,9 @@ const BudgetPercent = ({
         value={Math.abs(activeTotal)}
         maxValue={Math.abs(activeBudget)}
         label={percentLabel}
+        valueLabel={(activeTotal / activeBudget).toLocaleString(undefined, {
+          style: "percent",
+        })}
         classNames={{
           indicator: percentColor,
           label: "capitalize",
