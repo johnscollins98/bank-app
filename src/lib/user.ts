@@ -31,8 +31,12 @@ const getUserAccount = cache(async () => {
 
   const starling = new Starling(localAccount.apiToken);
   const accounts = await starling.getAccounts();
-  const accountId = accounts.accounts[0].accountUid;
-  const defaultCategory = accounts.accounts[0].defaultCategory;
+  const accountId = accounts.accounts[0]?.accountUid;
+  const defaultCategory = accounts.accounts[0]?.defaultCategory;
+
+  if (!accountId || !defaultCategory) {
+    redirect("/forbidden");
+  }
 
   return {
     user,

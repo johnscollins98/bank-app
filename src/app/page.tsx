@@ -17,7 +17,7 @@ export default async function Home({
   const { user, starling, accountId, localAccount, defaultCategory } =
     await getUserAccount();
 
-  const offset = parseInt(searchParams.offset ?? 0);
+  const offset = parseInt(searchParams.offset ?? "0");
   const filterBy = searchParams.filterBy ?? "";
 
   const date = new Date(Date.now());
