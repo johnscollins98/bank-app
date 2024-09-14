@@ -1,10 +1,18 @@
 import { z } from "zod";
+import { SPENDING_CATEGORIES } from "./starling-types";
+
+const budgetSchema = z
+  .record(z.enum(SPENDING_CATEGORIES), z.number())
+  .optional();
+
+export type Budgets = z.infer<typeof budgetSchema>;
 
 const accountSchema = z.object({
   email: z.string().email(),
   apiToken: z.string(),
   monthBarrier: z.enum(["last", "calendar"]),
   day: z.number(),
+  budgets: budgetSchema,
 });
 
 const accountsSchema = z.array(accountSchema);
