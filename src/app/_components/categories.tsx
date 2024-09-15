@@ -1,7 +1,11 @@
 "use client";
 
 import { Budgets } from "@/lib/accounts";
-import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
+import {
+  CategoryIcons,
+  SPENDING_CATEGORIES,
+  SpendingCategory,
+} from "@/lib/starling-types";
 import { Accordion, AccordionItem, Progress, Tooltip } from "@nextui-org/react";
 import Link from "next/link";
 
@@ -142,7 +146,16 @@ const CategoryChip = ({
   const absoluteBudgetString =
     budget && Math.abs(budget).toLocaleString(undefined, moneyFormat);
 
-  const tooltipString = `${absoluteTotalString} ${total > 0 ? "earned" : "spent"} ${budget ? `out of ${absoluteBudgetString} budget (${percentOfBudget}%)` : ""}`;
+  const categoryName = category.replaceAll("_", " ").toLocaleLowerCase();
+  const tooltipString = (
+    <div className="flex flex-col items-center gap-2">
+      <div className="capitalize">{categoryName}</div>
+      <div>
+        {absoluteTotalString}
+        {budget ? ` / ${absoluteBudgetString} (${percentOfBudget}%)` : ""}
+      </div>
+    </div>
+  );
 
   const budgetColour =
     !budget || budget > 0
@@ -153,6 +166,9 @@ const CategoryChip = ({
 
   const pillColour =
     category === "total" && total < 0 ? "bg-danger" : "bg-default";
+
+  const CategoryIcon =
+    category === "total" ? undefined : CategoryIcons[category];
 
   return (
     <Link
@@ -175,11 +191,11 @@ const CategoryChip = ({
               height: "100%",
             }}
           ></div>
-          <div className="flex gap-2">
-            <div className="capitalize">
-              {category.replaceAll("_", " ").toLocaleLowerCase()}
-            </div>
-            <div>{totalString}</div>
+          <div className="flex items-center gap-2 capitalize">
+            <span className="items-center">
+              {CategoryIcon ? <CategoryIcon size="16" /> : categoryName}
+            </span>
+            <span className="items-center">{totalString}</span>
           </div>
         </div>
       </Tooltip>

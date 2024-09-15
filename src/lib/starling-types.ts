@@ -1,3 +1,32 @@
+import { IconType } from "react-icons";
+import { BiSolidDonateHeart, BiSolidParty } from "react-icons/bi";
+import { BsHouseUpFill } from "react-icons/bs";
+import { FaCoffee, FaRunning } from "react-icons/fa";
+import {
+  FaBagShopping,
+  FaBurger,
+  FaCar,
+  FaCarrot,
+  FaChurch,
+  FaCreditCard,
+  FaEnvelope,
+  FaGasPump,
+  FaGift,
+  FaHeart,
+  FaHouse,
+  FaMoneyBill,
+  FaPiggyBank,
+  FaPizzaSlice,
+  FaReceipt,
+  FaShirt,
+  FaSun,
+  FaTrain,
+  FaTv,
+} from "react-icons/fa6";
+import { GiHealthNormal } from "react-icons/gi";
+import { IoPricetag } from "react-icons/io5";
+import { MdPaid, MdSubscriptions } from "react-icons/md";
+
 export interface Accounts {
   accounts: {
     accountUid: string;
@@ -130,3 +159,34 @@ export const SPENDING_CATEGORIES = [
 ] as const;
 
 export type SpendingCategory = (typeof SPENDING_CATEGORIES)[number];
+
+export const CategoryIcons: Partial<Record<SpendingCategory, IconType>> = {
+  BILLS_AND_SERVICES: FaEnvelope,
+  SHOPPING: FaBagShopping,
+  GROCERIES: FaCarrot,
+  ENTERTAINMENT: FaTv,
+  SAVING: FaPiggyBank,
+  DEBT_REPAYMENT: FaCreditCard,
+  EATING_OUT: FaBurger,
+  TAKEAWAY: FaPizzaSlice,
+  SUBSCRIPTIONS: MdSubscriptions,
+  CASH: FaMoneyBill,
+  INCOME: MdPaid,
+  LIFESTYLE: FaHeart,
+  FITNESS: FaRunning,
+  EXPENSES: FaReceipt,
+  TRANSPORT: FaTrain,
+  FUEL: FaGasPump,
+  GIFTS: FaGift,
+  HOLIDAYS: FaSun,
+  CAR: FaCar,
+  WEDDING: FaChurch,
+  IMPULSE_BUY: IoPricetag,
+  HOME: FaHouse,
+  MORTGAGE: BsHouseUpFill,
+  CELEBRATION: BiSolidParty,
+  CHARITY: BiSolidDonateHeart,
+  CLOTHES: FaShirt,
+  COFFEE: FaCoffee,
+  MEDICAL: GiHealthNormal,
+};
