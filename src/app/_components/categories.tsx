@@ -168,7 +168,7 @@ const CategoryChip = ({
           className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs transition-colors-opacity hover:opacity-80 ${searchParamKey === filterBy ? "font-bold" : "font-normal"}`}
         >
           <div
-            className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 100 ? "rounded-r-full" : ""} ${budgetColour}`}
+            className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 90 ? "rounded-r-full" : ""} ${budgetColour}`}
             style={{
               width: `${Math.min(percentOfBudget, 100)}%`,
               minWidth: percentOfBudget !== 0 ? "10px" : undefined,
