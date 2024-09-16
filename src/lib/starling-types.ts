@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import { BiSolidDonateHeart, BiSolidParty } from "react-icons/bi";
-import { BsHouseUpFill } from "react-icons/bs";
+import { BsEnvelopePaperFill, BsHouseUpFill } from "react-icons/bs";
 import { FaCoffee, FaRunning } from "react-icons/fa";
 import {
   FaBagShopping,
@@ -9,7 +9,6 @@ import {
   FaCarrot,
   FaChurch,
   FaCreditCard,
-  FaEnvelope,
   FaGasPump,
   FaGift,
   FaHeart,
@@ -161,7 +160,7 @@ export const SPENDING_CATEGORIES = [
 export type SpendingCategory = (typeof SPENDING_CATEGORIES)[number];
 
 export const CategoryIcons: Partial<Record<SpendingCategory, IconType>> = {
-  BILLS_AND_SERVICES: FaEnvelope,
+  BILLS_AND_SERVICES: BsEnvelopePaperFill,
   SHOPPING: FaBagShopping,
   GROCERIES: FaCarrot,
   ENTERTAINMENT: FaTv,
