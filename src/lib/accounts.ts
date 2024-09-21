@@ -2,7 +2,7 @@ import { z } from "zod";
 import { SPENDING_CATEGORIES } from "./starling-types";
 
 const budgetSchema = z
-  .record(z.enum(SPENDING_CATEGORIES), z.number())
+  .record(z.enum([...SPENDING_CATEGORIES, "total"]), z.number())
   .optional();
 
 export type Budgets = z.infer<typeof budgetSchema>;

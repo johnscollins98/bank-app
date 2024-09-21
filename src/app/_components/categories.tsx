@@ -70,8 +70,8 @@ const BudgetPercent = ({
   budgets?: Budgets;
   totals: Totals;
 }) => {
-  if (!filterBy || !budgets) return null;
-  const category = filterBy as SpendingCategory;
+  if (!budgets) return null;
+  const category = (filterBy || "total") as SpendingCategory;
 
   const activeBudget = budgets[category];
   if (!activeBudget) return null;
@@ -129,12 +129,12 @@ const CategoryChip = ({
   filterBy?: string;
   searchParams: Record<string, string>;
 }) => {
-  const budget = category === "total" ? undefined : budgets?.[category];
+  const budget = budgets?.[category];
   const total = totals[category] / 100;
 
   const searchParamKey = category === "total" ? "" : category;
 
-  const percentOfBudget = budget ? Math.floor((total / budget) * 100) : 0;
+  const percentOfBudget = budget ? total / budget : 0;
 
   const totalString = total.toLocaleString(undefined, moneyFormat);
 
@@ -152,7 +152,9 @@ const CategoryChip = ({
       <div className="capitalize">{categoryName}</div>
       <div>
         {absoluteTotalString}
-        {budget ? ` / ${absoluteBudgetString} (${percentOfBudget}%)` : ""}
+        {budget
+          ? ` / ${absoluteBudgetString} (${percentOfBudget.toLocaleString(undefined, { style: "percent" })})`
+          : ""}
       </div>
     </div>
   );
@@ -160,12 +162,14 @@ const CategoryChip = ({
   const budgetColour =
     !budget || budget > 0
       ? "bg-success-200 dark:bg-success"
-      : percentOfBudget > 100
+      : percentOfBudget > 1
         ? "bg-danger-200 dark:bg-danger"
         : "bg-secondary-200 dark:bg-secondary";
 
   const pillColour =
-    category === "total" && total < 0 ? "bg-danger" : "bg-default";
+    category === "total" && budget === undefined && total < 0
+      ? "bg-danger"
+      : "bg-default";
 
   const CategoryIcon =
     category === "total" ? undefined : CategoryIcons[category];
@@ -184,9 +188,9 @@ const CategoryChip = ({
           className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
         >
           <div
-            className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 90 ? "rounded-r-full" : ""} ${budgetColour}`}
+            className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 0.9 ? "rounded-r-full" : ""} ${budgetColour}`}
             style={{
-              width: `${Math.min(percentOfBudget, 100)}%`,
+              width: `${Math.min(percentOfBudget * 100, 100)}%`,
               minWidth: percentOfBudget !== 0 ? "10px" : undefined,
               height: "100%",
             }}
