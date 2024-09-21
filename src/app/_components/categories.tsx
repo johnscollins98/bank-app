@@ -29,7 +29,7 @@ export default function Categories({ searchParams, totals, budgets }: Props) {
     <Accordion>
       <AccordionItem title="Spending Summary">
         <div className="flex flex-col gap-6">
-          <div className="grid auto-rows-max grid-cols-[repeat(auto-fill,minmax(7em,auto))] gap-2 overflow-x-hidden">
+          <div className="flex flex-wrap gap-2">
             <CategoryChip
               totals={totals}
               category="total"
@@ -181,7 +181,7 @@ const CategoryChip = ({
       <Tooltip content={tooltipString} closeDelay={0}>
         <div
           color={category === filterBy ? "primary" : "default"}
-          className={`duration-25 relative z-10 flex h-7 items-center justify-center rounded-full ${pillColour} px-3 text-xs transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
+          className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
         >
           <div
             className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 90 ? "rounded-r-full" : ""} ${budgetColour}`}
