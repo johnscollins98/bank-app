@@ -1,13 +1,14 @@
 "use client";
 
-import { Budgets } from "@/lib/accounts";
 import {
   CategoryIcons,
   SPENDING_CATEGORIES,
   SpendingCategory,
 } from "@/lib/starling-types";
 import { Accordion, AccordionItem, Progress, Tooltip } from "@nextui-org/react";
+import { Budget } from "@prisma/client";
 import Link from "next/link";
+import { BudgetForm } from "./budget-form";
 
 export const moneyFormat: Intl.NumberFormatOptions = {
   style: "currency",
@@ -19,7 +20,7 @@ type Totals = Record<SpendingCategory | "total", number>;
 interface Props {
   searchParams: Record<string, string>;
   totals: Totals;
-  budgets?: Budgets;
+  budgets: Budget[];
 }
 
 export default function Categories({ searchParams, totals, budgets }: Props) {
@@ -55,6 +56,7 @@ export default function Categories({ searchParams, totals, budgets }: Props) {
             budgets={budgets}
             filterBy={filterBy}
           />
+          <BudgetForm budgets={budgets} filterBy={filterBy} />
         </div>
       </AccordionItem>
     </Accordion>
@@ -67,13 +69,13 @@ const BudgetPercent = ({
   totals,
 }: {
   filterBy?: string;
-  budgets?: Budgets;
+  budgets: Budget[];
   totals: Totals;
 }) => {
   if (!budgets) return null;
   const category = (filterBy || "total") as SpendingCategory;
 
-  const activeBudget = budgets[category];
+  const activeBudget = budgets.find((b) => b.category === category)?.amount;
   if (!activeBudget) return null;
 
   const activeTotal = (totals[category] ?? 0) / 100;
@@ -125,11 +127,11 @@ const CategoryChip = ({
 }: {
   category: SpendingCategory | "total";
   totals: Totals;
-  budgets?: Budgets;
+  budgets: Budget[];
   filterBy?: string;
   searchParams: Record<string, string>;
 }) => {
-  const budget = budgets?.[category];
+  const budget = budgets.find((b) => b.category === category)?.amount;
   const total = totals[category] / 100;
 
   const searchParamKey = category === "total" ? "" : category;

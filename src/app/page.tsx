@@ -1,4 +1,5 @@
 import { getStartAndEndOfMonth } from "@/lib/date-range";
+import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import { SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
@@ -72,11 +73,11 @@ export default async function Home({
 
   const balance = await starling.getBalance(accountId);
 
-  const budgets = localAccount.budgets;
+  const budgets = await db.budget.findMany({ where: { userId: accountId } });
   const balanceAfterBudget =
     budgets &&
-    Object.entries(budgets).reduce((bal, [category, budget]) => {
-      const budgetPennies = budget * 100;
+    budgets.reduce((bal, { category, amount }) => {
+      const budgetPennies = amount * 100;
       const totalSpendEarned = totals[category as SpendingCategory];
 
       if (totalSpendEarned === undefined) {
@@ -85,7 +86,7 @@ export default async function Home({
 
       const remainingBalance = budgetPennies - totalSpendEarned;
       const clampedRemainingBalance =
-        budget > 0
+        amount > 0
           ? Math.max(0, remainingBalance)
           : Math.min(0, remainingBalance);
 
@@ -122,7 +123,7 @@ export default async function Home({
       <Categories
         searchParams={searchParams}
         totals={totals}
-        budgets={localAccount.budgets}
+        budgets={budgets}
       />
       <div className="flex flex-1 flex-col overflow-auto">
         {feedItems.map((feedItem) => (
