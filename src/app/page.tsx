@@ -1,7 +1,7 @@
 import { getStartAndEndOfMonth } from "@/lib/date-range";
 import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
-import { SpendingCategory } from "@/lib/starling-types";
+import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
 import { Button, ButtonGroup } from "@nextui-org/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
@@ -73,7 +73,25 @@ export default async function Home({
 
   const balance = await starling.getBalance(accountId);
 
-  const budgets = await db.budget.findMany({ where: { userId: accountId } });
+  const defaultBudgets = await db.budget.findMany({
+    where: { userId: accountId },
+  });
+  const budgetOverrides = await db.budgetOverride.findMany({
+    where: { userId: accountId, date: start },
+  });
+
+  const budgets = (
+    await Promise.all(
+      [...SPENDING_CATEGORIES, "total"].map(async (category) => {
+        const override = budgetOverrides.find((o) => o.category === category);
+        const defaultBudget = defaultBudgets.find(
+          (b) => b.category === category,
+        );
+        return override ? { ...override, isOverride: true } : defaultBudget;
+      }),
+    )
+  ).filter((b) => b !== undefined);
+
   const balanceAfterBudget =
     budgets &&
     budgets.reduce((bal, { category, amount }) => {
@@ -124,6 +142,7 @@ export default async function Home({
         searchParams={searchParams}
         totals={totals}
         budgets={budgets}
+        startDate={start}
       />
       <div className="flex flex-1 flex-col overflow-auto">
         {feedItems.map((feedItem) => (

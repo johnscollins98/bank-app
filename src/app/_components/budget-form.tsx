@@ -6,6 +6,7 @@ import {
   Autocomplete,
   AutocompleteItem,
   Button,
+  Checkbox,
   Input,
   Modal,
   ModalBody,
@@ -17,8 +18,9 @@ import { Budget } from "@prisma/client";
 import { FormEventHandler, useEffect, useState } from "react";
 
 export interface Props {
-  budgets: Budget[];
+  budgets: (Budget & { isOverride?: boolean })[];
   filterBy?: string;
+  startDate: Date;
 }
 
 const formatCategoryString = (c: string) => {
@@ -30,7 +32,7 @@ const formatCategoryString = (c: string) => {
     .join(" ");
 };
 
-export const BudgetForm = ({ budgets, filterBy }: Props) => {
+export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
   const category = (filterBy as SpendingCategory) || "total";
   const existingBudget = budgets.find((b) => b.category === category);
   const categoryString = formatCategoryString(category);
@@ -39,6 +41,7 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
   const [removeWarningOpen, setRemoveWarningOpen] = useState(false);
   const [amount, setAmount] = useState(existingBudget?.amount.toString() ?? "");
   const [selectedCategory, setSelectedCategory] = useState(category);
+  const [singleMonthOnly, setSingleMonthOnly] = useState(false);
 
   useEffect(() => {
     setAmount(existingBudget?.amount.toString() ?? "");
@@ -57,13 +60,17 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
     await setBudget({
       amount: parseFloat(amount),
       category: selectedCategory,
+      date: singleMonthOnly ? startDate : undefined,
     });
 
     setBudgetModalOpen(false);
   };
 
   const onRemoveBudget = async () => {
-    await removeBudget({ category });
+    await removeBudget({
+      category,
+      date: startDate,
+    });
     setRemoveWarningOpen(false);
   };
 
@@ -72,7 +79,7 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
       <div className="flex items-center justify-end gap-2">
         {existingBudget && (
           <Button onClick={() => setRemoveWarningOpen(true)}>
-            Remove Budget
+            {existingBudget?.isOverride ? "Use Default" : "Remove"} Budget
           </Button>
         )}
         <Button onClick={() => setBudgetModalOpen(true)}>
@@ -84,10 +91,15 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
         onClose={() => setRemoveWarningOpen(false)}
       >
         <ModalContent>
-          <ModalHeader>Remove Budget</ModalHeader>
+          <ModalHeader>
+            {existingBudget?.isOverride ? "Use Default" : "Remove"} Budget
+          </ModalHeader>
           <ModalBody>
-            Are you sure you want to remove the budget for &quot;
+            Are you sure you want to{" "}
+            {existingBudget?.isOverride ? "use the default" : "remove the"}{" "}
+            budget for &quot;
             {categoryString}&quot;
+            {existingBudget?.isOverride && " in this month"}?
           </ModalBody>
           <ModalFooter>
             <div className="flex items-center justify-end gap-1">
@@ -136,6 +148,17 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
+                <div className="flex gap-2">
+                  <label htmlFor="single-month">
+                    Override for this month only:
+                  </label>
+                  <Checkbox
+                    name="single-month"
+                    id="single-month"
+                    checked={singleMonthOnly}
+                    onClick={() => setSingleMonthOnly(!singleMonthOnly)}
+                  />
+                </div>
               </div>
             </ModalBody>
             <ModalFooter>

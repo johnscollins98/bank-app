@@ -17,3 +17,15 @@ model Budget {
 
   @@unique([category, userId], map: "category_user_id_unique")
 }
+
+model BudgetOverride {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  category  String
+  amount    Float
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category, date], map: "category_user_id_date_unique")
+}

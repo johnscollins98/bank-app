@@ -20,10 +20,16 @@ type Totals = Record<SpendingCategory | "total", number>;
 interface Props {
   searchParams: Record<string, string>;
   totals: Totals;
-  budgets: Budget[];
+  budgets: (Budget & { isOverride?: boolean })[];
+  startDate: Date;
 }
 
-export default function Categories({ searchParams, totals, budgets }: Props) {
+export default function Categories({
+  searchParams,
+  totals,
+  budgets,
+  startDate,
+}: Props) {
   const { filterBy } = searchParams;
 
   return (
@@ -58,7 +64,11 @@ export default function Categories({ searchParams, totals, budgets }: Props) {
             budgets={budgets}
             filterBy={filterBy}
           />
-          <BudgetForm budgets={budgets} filterBy={filterBy} />
+          <BudgetForm
+            budgets={budgets}
+            filterBy={filterBy}
+            startDate={startDate}
+          />
         </div>
       </AccordionItem>
     </Accordion>
