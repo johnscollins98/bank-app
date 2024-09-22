@@ -16,7 +16,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.4.2",
+    "@nextui-org/react": "^2.4.8",
     "@prisma/client": "5.19.1",
     "framer-motion": "^11.2.11",
     "next": "14.2.4",
