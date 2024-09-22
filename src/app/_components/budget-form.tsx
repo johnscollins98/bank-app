@@ -130,6 +130,7 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                     type="number"
                     isRequired
                     required
+                    size="lg"
                     label="Amount"
                   />
                 </div>
@@ -137,6 +138,7 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                   label="Category"
                   required
                   isRequired
+                  size="lg"
                   selectedKey={selectedCategory}
                   onSelectionChange={(v) =>
                     setSelectedCategory(v as SpendingCategory)
