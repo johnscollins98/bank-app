@@ -38,7 +38,9 @@ export default function Categories({ searchParams, totals, budgets }: Props) {
               searchParams={searchParams}
               budgets={budgets}
             />
-            {SPENDING_CATEGORIES.filter((k) => !!totals[k])
+            {SPENDING_CATEGORIES.filter(
+              (k) => !!totals[k] || !!budgets.find((c) => c.category === k),
+            )
               .toSorted((a, b) => totals[a] - totals[b])
               .map((category) => (
                 <CategoryChip
@@ -132,7 +134,7 @@ const CategoryChip = ({
   searchParams: Record<string, string>;
 }) => {
   const budget = budgets.find((b) => b.category === category)?.amount;
-  const total = totals[category] / 100;
+  const total = (totals[category] ?? 0) / 100;
 
   const searchParamKey = category === "total" ? "" : category;
 

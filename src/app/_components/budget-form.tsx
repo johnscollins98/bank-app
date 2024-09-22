@@ -1,8 +1,10 @@
 "use client";
 
 import { removeBudget, setBudget } from "@/lib/actions/set-budget";
-import { SpendingCategory } from "@/lib/starling-types";
+import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import {
+  Autocomplete,
+  AutocompleteItem,
   Button,
   Input,
   Modal,
@@ -19,22 +21,32 @@ export interface Props {
   filterBy?: string;
 }
 
-export const BudgetForm = ({ budgets, filterBy }: Props) => {
-  const category = (filterBy as SpendingCategory) || "total";
-  const existingBudget = budgets.find((b) => b.category === category);
-  const categoryString = category
+const formatCategoryString = (c: string) => {
+  return c
     .toLocaleLowerCase()
     .replaceAll("_", " ")
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+};
+
+export const BudgetForm = ({ budgets, filterBy }: Props) => {
+  const category = (filterBy as SpendingCategory) || "total";
+  const existingBudget = budgets.find((b) => b.category === category);
+  const categoryString = formatCategoryString(category);
 
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [removeWarningOpen, setRemoveWarningOpen] = useState(false);
   const [amount, setAmount] = useState(existingBudget?.amount.toString() ?? "");
+  const [selectedCategory, setSelectedCategory] = useState(category);
+
   useEffect(() => {
     setAmount(existingBudget?.amount.toString() ?? "");
   }, [existingBudget]);
+
+  useEffect(() => {
+    setSelectedCategory(category);
+  }, [category]);
 
   const setBudgetSubmitHandler: FormEventHandler<HTMLFormElement> = async (
     e,
@@ -44,7 +56,7 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
 
     await setBudget({
       amount: parseFloat(amount),
-      category,
+      category: selectedCategory,
     });
 
     setBudgetModalOpen(false);
@@ -97,15 +109,33 @@ export const BudgetForm = ({ budgets, filterBy }: Props) => {
               Set Budget for &quot;{categoryString}&quot;
             </ModalHeader>
             <ModalBody>
-              <div className="flex items-center gap-1">
-                £
-                <Input
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  type="number"
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-1">
+                  £
+                  <Input
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    type="number"
+                    isRequired
+                    required
+                    label="Amount"
+                  />
+                </div>
+                <Autocomplete
+                  label="Category"
                   required
-                  label="Amount"
-                />
+                  isRequired
+                  selectedKey={selectedCategory}
+                  onSelectionChange={(v) =>
+                    setSelectedCategory(v as SpendingCategory)
+                  }
+                >
+                  {[...SPENDING_CATEGORIES, "total"].map((c) => (
+                    <AutocompleteItem value={c} key={c}>
+                      {formatCategoryString(c)}
+                    </AutocompleteItem>
+                  ))}
+                </Autocomplete>
               </div>
             </ModalBody>
             <ModalFooter>
