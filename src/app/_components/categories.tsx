@@ -126,7 +126,7 @@ const OverallBudgetPercent = ({
     <BudgetPercentBar
       amount={totalOutOfBudget}
       budget={overallBudget}
-      label="Overall Spending Budget"
+      label="Overall"
     />
   );
 };
