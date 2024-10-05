@@ -119,7 +119,7 @@ const OverallBudgetPercent = ({
       if (amount >= 0) return total;
 
       const spent = totals[category as SpendingCategory];
-      return total + spent;
+      return spent ? total + spent : total;
     }, 0) / 100;
 
   return (
