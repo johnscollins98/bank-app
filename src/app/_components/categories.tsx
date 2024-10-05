@@ -64,6 +64,7 @@ export default function Categories({
             budgets={budgets}
             filterBy={filterBy}
           />
+          <OverallBudgetPercent totals={totals} budgets={budgets} />
           <BudgetForm
             budgets={budgets}
             filterBy={filterBy}
@@ -84,7 +85,6 @@ const BudgetPercent = ({
   budgets: Budget[];
   totals: Totals;
 }) => {
-  if (!budgets) return null;
   const category = (filterBy || "total") as SpendingCategory;
 
   const activeBudget = budgets.find((b) => b.category === category)?.amount;
@@ -92,41 +92,87 @@ const BudgetPercent = ({
 
   const activeTotal = (totals[category] ?? 0) / 100;
 
+  return (
+    <BudgetPercentBar
+      amount={activeTotal}
+      budget={activeBudget}
+      label={category.toLocaleLowerCase().replaceAll("_", " ")}
+    />
+  );
+};
+
+const OverallBudgetPercent = ({
+  totals,
+  budgets,
+}: {
+  totals: Totals;
+  budgets: Budget[];
+}) => {
+  const overallBudget = budgets.reduce((total, { amount }) => {
+    return amount < 0 ? total + amount : total;
+  }, 0);
+
+  if (overallBudget === 0) return null;
+
+  const totalOutOfBudget =
+    budgets.reduce((total, { category, amount }) => {
+      if (amount >= 0) return total;
+
+      const spent = totals[category as SpendingCategory];
+      return total + spent;
+    }, 0) / 100;
+
+  return (
+    <BudgetPercentBar
+      amount={totalOutOfBudget}
+      budget={overallBudget}
+      label="Overall Spending Budget"
+    />
+  );
+};
+
+const BudgetPercentBar = ({
+  amount,
+  budget,
+  label,
+}: {
+  amount: number;
+  budget: number;
+  label: string;
+}) => {
   const percentColor =
-    activeBudget > 0
+    budget > 0
       ? "dark:bg-success bg-success-200"
-      : activeBudget > activeTotal
+      : budget > amount
         ? "dark:bg-danger bg-danger-200"
         : "dark:bg-secondary bg-secondary-200";
 
-  const absoluteTotalString = Math.abs(activeTotal).toLocaleString(
+  const absoluteAmountString = Math.abs(amount).toLocaleString(
     undefined,
     moneyFormat,
   );
 
-  const absoluteBudgetString = Math.abs(activeBudget).toLocaleString(
+  const absoluteBudgetString = Math.abs(budget).toLocaleString(
     undefined,
     moneyFormat,
   );
 
-  const percentLabel = `${category.toLocaleLowerCase().replaceAll("_", " ")} - ${absoluteTotalString} / ${absoluteBudgetString}`;
+  const percentLabel = `${label} - ${absoluteAmountString} / ${absoluteBudgetString}`;
 
   return (
-    <div>
-      <Progress
-        value={Math.abs(activeTotal)}
-        maxValue={Math.abs(activeBudget)}
-        label={percentLabel}
-        valueLabel={(activeTotal / activeBudget).toLocaleString(undefined, {
-          style: "percent",
-        })}
-        classNames={{
-          indicator: percentColor,
-          label: "capitalize",
-        }}
-        showValueLabel
-      />
-    </div>
+    <Progress
+      value={Math.abs(amount)}
+      maxValue={Math.abs(budget)}
+      label={percentLabel}
+      valueLabel={(amount / budget).toLocaleString(undefined, {
+        style: "percent",
+      })}
+      classNames={{
+        indicator: percentColor,
+        label: "capitalize",
+      }}
+      showValueLabel
+    />
   );
 };
 
