@@ -2,23 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  /* background: #f1f1f1; */
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #666;
-  border-radius: 6px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+html {
+  box-sizing: border-box;
+  min-height: calc(100% + (env(safe-area-inset-top)));
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }

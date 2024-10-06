@@ -112,7 +112,7 @@ export default async function Home({
     }, balance.effectiveBalance.minorUnits) / 100;
 
   return (
-    <main className="flex h-[100dvh] flex-1 flex-col gap-4 overflow-hidden p-4">
+    <main className="flex flex-col gap-4 p-4">
       <LogoutForm user={user} />
       <div className="flex items-center justify-between gap-2">
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
@@ -144,7 +144,7 @@ export default async function Home({
         budgets={budgets}
         startDate={start}
       />
-      <div className="flex flex-1 flex-col overflow-auto">
+      <div className="flex flex-1 flex-col">
         {feedItems.map((feedItem) => (
           <FeedEntry
             key={feedItem.feedItemUid}
