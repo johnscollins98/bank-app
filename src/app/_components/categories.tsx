@@ -45,7 +45,9 @@ export default function Categories({
               budgets={budgets}
             />
             {SPENDING_CATEGORIES.filter(
-              (k) => !!totals[k] || !!budgets.find((c) => c.category === k),
+              (k) =>
+                totals[k] !== undefined ||
+                !!budgets.find((c) => c.category === k),
             )
               .toSorted((a, b) => totals[a] - totals[b])
               .map((category) => (
