@@ -10,6 +10,11 @@ import DateDisplay from "./_components/date";
 import FeedEntry from "./_components/feed-entry";
 import LogoutForm from "./_components/logout-form";
 
+export const moneyFormat: Intl.NumberFormatOptions = {
+  style: "currency",
+  currency: "GBP",
+};
+
 export default async function Home({
   searchParams,
 }: {
@@ -130,11 +135,16 @@ export default async function Home({
       </div>
       <div className="flex items-center justify-between">
         <div className="font-bold">
-          Balance: £ {balance.effectiveBalance.minorUnits / 100}
+          Balance:{" "}
+          {(balance.effectiveBalance.minorUnits / 100).toLocaleString(
+            undefined,
+            moneyFormat,
+          )}
         </div>
         {balanceAfterBudget && (
           <div className="font-bold">
-            Balance After Budget: £ {balanceAfterBudget}
+            Balance After Budget:{" "}
+            {balanceAfterBudget.toLocaleString(undefined, moneyFormat)}
           </div>
         )}
       </div>

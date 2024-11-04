@@ -8,12 +8,8 @@ import {
 import { Accordion, AccordionItem, Progress, Tooltip } from "@nextui-org/react";
 import { Budget } from "@prisma/client";
 import Link from "next/link";
+import { moneyFormat } from "../page";
 import { BudgetForm } from "./budget-form";
-
-export const moneyFormat: Intl.NumberFormatOptions = {
-  style: "currency",
-  currency: "GBP",
-};
 
 type Totals = Record<SpendingCategory | "total", number>;
 

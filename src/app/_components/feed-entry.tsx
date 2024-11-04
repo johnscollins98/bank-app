@@ -11,6 +11,7 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import { useOptimistic, useState } from "react";
+import { moneyFormat } from "../page";
 import DateDisplay from "./date";
 import TimeDisplay from "./time";
 
@@ -53,13 +54,10 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
               "text-blue-600 dark:text-blue-400"
             }`}
           >
-            {optimisticFeedItem.direction === "IN" && "+"}£
+            {optimisticFeedItem.direction === "IN" && "+"}
             {(optimisticFeedItem.amount.minorUnits / 100).toLocaleString(
               undefined,
-              {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
+              moneyFormat,
             )}
           </div>
         </div>
