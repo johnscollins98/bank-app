@@ -1,3 +1,4 @@
+import { formatAsGBP } from "@/lib/currency-format";
 import { getStartAndEndOfMonth } from "@/lib/date-range";
 import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
@@ -9,11 +10,6 @@ import Categories from "./_components/categories";
 import DateDisplay from "./_components/date";
 import FeedEntry from "./_components/feed-entry";
 import LogoutForm from "./_components/logout-form";
-
-export const moneyFormat: Intl.NumberFormatOptions = {
-  style: "currency",
-  currency: "GBP",
-};
 
 export default async function Home({
   searchParams,
@@ -135,16 +131,11 @@ export default async function Home({
       </div>
       <div className="flex items-center justify-between">
         <div className="font-bold">
-          Balance:{" "}
-          {(balance.effectiveBalance.minorUnits / 100).toLocaleString(
-            undefined,
-            moneyFormat,
-          )}
+          Balance: {formatAsGBP(balance.effectiveBalance.minorUnits / 100)}
         </div>
         {balanceAfterBudget && (
           <div className="font-bold">
-            Balance After Budget:{" "}
-            {balanceAfterBudget.toLocaleString(undefined, moneyFormat)}
+            Balance After Budget: {formatAsGBP(balanceAfterBudget)}
           </div>
         )}
       </div>

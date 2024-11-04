@@ -1,6 +1,7 @@
 "use client";
 
 import setCategory from "@/lib/actions/set-category";
+import { formatAsGBP } from "@/lib/currency-format";
 import { SpendingCategory, Transactions } from "@/lib/starling-types";
 import {
   Button,
@@ -11,7 +12,6 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import { useOptimistic, useState } from "react";
-import { moneyFormat } from "../page";
 import DateDisplay from "./date";
 import TimeDisplay from "./time";
 
@@ -55,10 +55,7 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
             }`}
           >
             {optimisticFeedItem.direction === "IN" && "+"}
-            {(optimisticFeedItem.amount.minorUnits / 100).toLocaleString(
-              undefined,
-              moneyFormat,
-            )}
+            {formatAsGBP(optimisticFeedItem.amount.minorUnits / 100)}
           </div>
         </div>
         <div className="flex justify-between text-xs text-foreground-500">

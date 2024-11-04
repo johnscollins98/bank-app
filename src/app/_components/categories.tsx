@@ -1,5 +1,6 @@
 "use client";
 
+import { formatAsGBP } from "@/lib/currency-format";
 import {
   CategoryIcons,
   SPENDING_CATEGORIES,
@@ -8,7 +9,6 @@ import {
 import { Accordion, AccordionItem, Progress, Tooltip } from "@nextui-org/react";
 import { Budget } from "@prisma/client";
 import Link from "next/link";
-import { moneyFormat } from "../page";
 import { BudgetForm } from "./budget-form";
 
 type Totals = Record<SpendingCategory | "total", number>;
@@ -145,15 +145,9 @@ const BudgetPercentBar = ({
         ? "dark:bg-danger bg-danger-200"
         : "dark:bg-secondary bg-secondary-200";
 
-  const absoluteAmountString = Math.abs(amount).toLocaleString(
-    undefined,
-    moneyFormat,
-  );
+  const absoluteAmountString = formatAsGBP(Math.abs(amount));
 
-  const absoluteBudgetString = Math.abs(budget).toLocaleString(
-    undefined,
-    moneyFormat,
-  );
+  const absoluteBudgetString = formatAsGBP(Math.abs(budget));
 
   const percentLabel = `${label} - ${absoluteAmountString} / ${absoluteBudgetString}`;
 
@@ -194,15 +188,11 @@ const CategoryChip = ({
 
   const percentOfBudget = budget ? total / budget : 0;
 
-  const totalString = total.toLocaleString(undefined, moneyFormat);
+  const totalString = formatAsGBP(total);
 
-  const absoluteTotalString = Math.abs(total).toLocaleString(
-    undefined,
-    moneyFormat,
-  );
+  const absoluteTotalString = formatAsGBP(Math.abs(total));
 
-  const absoluteBudgetString =
-    budget && Math.abs(budget).toLocaleString(undefined, moneyFormat);
+  const absoluteBudgetString = budget && formatAsGBP(Math.abs(budget));
 
   const categoryName = category.replaceAll("_", " ").toLocaleLowerCase();
   const tooltipString = (
