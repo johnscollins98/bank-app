@@ -4,7 +4,8 @@ import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
-import { Button, ButtonGroup } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import Categories from "./_components/categories";
 import DateDisplay from "./_components/date";
@@ -117,17 +118,27 @@ export default async function Home({
       <LogoutForm user={user} />
       <div className="flex items-center justify-between gap-2">
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
-        <ButtonGroup>
-          <Button size="sm" as="a" href={`.?${createRedirectLink(offset - 1)}`}>
+        <div className="flex gap-1">
+          <Button
+            size="sm"
+            className="min-w-0"
+            as={Link}
+            href={`.?${createRedirectLink(offset - 1)}`}
+          >
             <FaArrowLeft />
           </Button>
-          <Button size="sm" as="a" href={`.?${createRedirectLink(0)}`}>
+          <Button size="sm" as={Link} href={`.?${createRedirectLink(0)}`}>
             Today
           </Button>
-          <Button size="sm" as="a" href={`.?${createRedirectLink(offset + 1)}`}>
+          <Button
+            size="sm"
+            as={Link}
+            className="min-w-0"
+            href={`.?${createRedirectLink(offset + 1)}`}
+          >
             <FaArrowRight />
           </Button>
-        </ButtonGroup>
+        </div>
       </div>
       <div className="flex items-center justify-between">
         <div className="font-bold">
