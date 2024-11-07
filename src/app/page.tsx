@@ -94,6 +94,8 @@ export default async function Home({
     )
   ).filter((b) => b !== undefined);
 
+  const balancePennies = balance.effectiveBalance.minorUnits;
+
   const balanceAfterBudget =
     budgets &&
     budgets.reduce((bal, { category, amount }) => {
@@ -111,7 +113,7 @@ export default async function Home({
           : Math.min(0, remainingBalance);
 
       return bal + clampedRemainingBalance;
-    }, balance.effectiveBalance.minorUnits) / 100;
+    }, balancePennies) / 100;
 
   return (
     <main className="flex flex-col gap-4 p-4">
@@ -141,13 +143,9 @@ export default async function Home({
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <div className="font-bold">
-          Balance: {formatAsGBP(balance.effectiveBalance.minorUnits / 100)}
-        </div>
+        <BalanceDisplay amount={balancePennies / 100} label="Balance" />
         {balanceAfterBudget && (
-          <div className="font-bold">
-            Balance After Budget: {formatAsGBP(balanceAfterBudget)}
-          </div>
+          <BalanceDisplay amount={balanceAfterBudget} label="After Budget" />
         )}
       </div>
       <Categories
@@ -168,3 +166,22 @@ export default async function Home({
     </main>
   );
 }
+
+const BalanceDisplay = ({
+  amount,
+  label,
+}: {
+  amount: number;
+  label: string;
+}) => (
+  <div className="flex gap-2 font-bold">
+    <span>{label}:</span>
+    <span
+      className={
+        amount >= 0 ? "text-blue-600 dark:text-blue-400" : "text-danger"
+      }
+    >
+      {formatAsGBP(amount)}
+    </span>
+  </div>
+);
