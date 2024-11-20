@@ -69,7 +69,7 @@ export class Starling {
       {
         ...options,
         body: body && JSON.stringify(body),
-        next: { revalidate: 60 },
+        next: { revalidate: 10 },
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
           "Content-Type": "application/json",
