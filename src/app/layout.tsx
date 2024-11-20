@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { PullToRefresh } from "./_components/pull-to-refresh";
 import { Theme } from "./_components/Theme";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -34,6 +35,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} flex flex-col`}>
         <Providers>
+          <PullToRefresh />
           <Theme>{children}</Theme>
         </Providers>
       </body>
