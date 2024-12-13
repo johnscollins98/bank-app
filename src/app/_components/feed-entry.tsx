@@ -3,14 +3,9 @@
 import setCategory from "@/lib/actions/set-category";
 import { formatAsGBP } from "@/lib/currency-format";
 import { SpendingCategory, Transactions } from "@/lib/starling-types";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/input";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/modal";
 import { useOptimistic, useState } from "react";
 import DateDisplay from "./date";
 import TimeDisplay from "./time";
@@ -101,7 +96,7 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
                     variant="light"
                     fullWidth
                     key={c}
-                    onClick={() => updateCategoryHandler(c)}
+                    onPress={() => updateCategoryHandler(c)}
                   >
                     {c.replaceAll("_", " ").toLocaleLowerCase()}
                   </Button>

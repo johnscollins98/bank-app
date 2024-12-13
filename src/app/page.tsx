@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import Categories from "./_components/categories";
@@ -12,11 +12,10 @@ import DateDisplay from "./_components/date";
 import FeedEntry from "./_components/feed-entry";
 import LogoutForm from "./_components/logout-form";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Record<string, string>;
+export default async function Home(props: {
+  searchParams: Promise<Record<string, string>>;
 }) {
+  const searchParams = await props.searchParams;
   const { user, starling, accountId, localAccount, defaultCategory } =
     await getUserAccount();
 

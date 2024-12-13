@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
 import { signOut } from "next-auth/react";
 
 export default function Forbidden() {
@@ -8,7 +8,7 @@ export default function Forbidden() {
     <div className="flex flex-1 flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         You do not have permission to view this page.
-        <Button onClick={() => signOut({ redirect: true, callbackUrl: "/" })}>
+        <Button onPress={() => signOut({ redirect: true, callbackUrl: "/" })}>
           Sign out
         </Button>
       </div>

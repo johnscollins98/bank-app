@@ -2,18 +2,17 @@
 
 import { removeBudget, setBudget } from "@/lib/actions/set-budget";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { Button } from "@nextui-org/button";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Input } from "@nextui-org/input";
 import {
-  Autocomplete,
-  AutocompleteItem,
-  Button,
-  Checkbox,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from "@nextui-org/react";
+} from "@nextui-org/modal";
 import { Budget } from "@prisma/client";
 import { FormEventHandler, useEffect, useState } from "react";
 
@@ -78,11 +77,11 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
     <>
       <div className="flex items-center justify-end gap-2">
         {existingBudget && (
-          <Button onClick={() => setRemoveWarningOpen(true)}>
+          <Button onPress={() => setRemoveWarningOpen(true)}>
             {existingBudget?.isOverride ? "Use Default" : "Remove"} Budget
           </Button>
         )}
-        <Button onClick={() => setBudgetModalOpen(true)}>
+        <Button onPress={() => setBudgetModalOpen(true)}>
           {existingBudget ? "Update" : "Add"} Budget
         </Button>
       </div>
@@ -103,8 +102,8 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
           </ModalBody>
           <ModalFooter>
             <div className="flex items-center justify-end gap-1">
-              <Button onClick={() => setRemoveWarningOpen(false)}>No</Button>
-              <Button color="danger" onClick={onRemoveBudget}>
+              <Button onPress={() => setRemoveWarningOpen(false)}>No</Button>
+              <Button color="danger" onPress={onRemoveBudget}>
                 Yes
               </Button>
             </div>

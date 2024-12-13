@@ -1,11 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import { PullToRefresh } from "./_components/pull-to-refresh";
 import { Theme } from "./_components/Theme";
 import "./globals.css";
 import { Providers } from "./providers";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Bank App",
@@ -25,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
@@ -33,7 +30,7 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className={`${inter.className} flex flex-col`}>
+      <body className="flex flex-col">
         <Providers>
           <PullToRefresh />
           <Theme>{children}</Theme>
