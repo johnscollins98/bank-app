@@ -1,16 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 interface Props {
   date: Date;
 }
 
 export default function TimeDisplay({ date }: Props) {
-  const [dateAsString, setDateAsString] = useState<string | null>(null);
-  useEffect(() => {
-    setDateAsString(date.toLocaleTimeString(undefined, { timeStyle: "short" }));
-  }, [date]);
+  const dateAsString = date.toLocaleTimeString(undefined, {
+    timeStyle: "short",
+  });
 
-  return dateAsString;
+  // suppress hydration warning due to local date display settings
+  return <div suppressHydrationWarning>{dateAsString}</div>;
 }

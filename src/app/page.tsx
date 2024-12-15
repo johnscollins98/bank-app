@@ -118,7 +118,9 @@ export default async function Home(props: {
     <main className="flex flex-col gap-4 p-4">
       <LogoutForm user={user} />
       <div className="flex items-center justify-between gap-2">
-        <DateDisplay date={start} /> - {<DateDisplay date={end} />}
+        <div className="flex gap-1">
+          <DateDisplay date={start} /> - {<DateDisplay date={end} />}
+        </div>
         <div className="flex gap-1">
           <Button
             size="sm"

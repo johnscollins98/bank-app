@@ -62,8 +62,8 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
             </div>
             <div>{optimisticFeedItem.reference}</div>
           </div>
-          <div>
-            <DateDisplay date={new Date(optimisticFeedItem.transactionTime)} />,{" "}
+          <div className="flex">
+            <DateDisplay date={new Date(optimisticFeedItem.transactionTime)} />,
             <TimeDisplay date={new Date(optimisticFeedItem.transactionTime)} />
           </div>
         </div>
