@@ -156,8 +156,8 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                   <Checkbox
                     name="single-month"
                     id="single-month"
-                    checked={singleMonthOnly}
-                    onClick={() => setSingleMonthOnly(!singleMonthOnly)}
+                    isSelected={singleMonthOnly}
+                    onValueChange={setSingleMonthOnly}
                   />
                 </div>
               </div>
