@@ -1,11 +1,10 @@
 "server-only";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { getAccounts } from "./accounts";
-import { db } from "./db";
 import { Starling } from "./starling-api-service";
 
 const getUserAccount = cache(async () => {
@@ -21,11 +20,6 @@ const getUserAccount = cache(async () => {
 
   const { email } = user;
   if (!email) {
-    redirect("/forbidden");
-  }
-
-  const dbUser = await db.user.findUnique({ where: { email } });
-  if (!dbUser) {
     redirect("/forbidden");
   }
 
@@ -47,7 +41,7 @@ const getUserAccount = cache(async () => {
   }
 
   return {
-    user: dbUser,
+    user,
     starling,
     accountId,
     defaultCategory,
