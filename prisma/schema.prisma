@@ -30,6 +30,19 @@ model BudgetOverride {
   @@unique([userId, category, date], map: "category_user_id_date_unique")
 }
 
+model UserSettings {
+  id                 Int                @id @unique @default(autoincrement())
+  monthBarrierOption MonthBarrierOption
+  day                Int
+  userId             String             @unique
+  User               User               @relation(fields: [userId], references: [id])
+}
+
+enum MonthBarrierOption {
+  LAST
+  CALENDAR
+}
+
 // Auth
 model User {
   id            String    @id @default(cuid())
@@ -42,6 +55,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  UserSettings UserSettings?
 }
 
 model Account {

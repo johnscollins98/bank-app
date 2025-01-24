@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { getAccounts } from "./accounts";
+import { db } from "./db";
 import { Starling } from "./starling-api-service";
 
 const getUserAccount = cache(async () => {
@@ -18,19 +19,25 @@ const getUserAccount = cache(async () => {
     redirect("/forbidden");
   }
 
-  const localAccounts = getAccounts();
   const { email } = user;
   if (!email) {
     redirect("/forbidden");
   }
 
-  const localAccount = localAccounts.find((a) => a.email === email);
-
-  if (!localAccount) {
+  const dbUser = await db.user.findUnique({ where: { email } });
+  if (!dbUser) {
     redirect("/forbidden");
   }
 
-  const starling = new Starling(localAccount.apiToken);
+  const localAccounts = getAccounts();
+
+  const accountToken = localAccounts[email];
+
+  if (!accountToken) {
+    redirect("/forbidden");
+  }
+
+  const starling = new Starling(accountToken);
   const accounts = await starling.getAccounts();
   const accountId = accounts.accounts[0]?.accountUid;
   const defaultCategory = accounts.accounts[0]?.defaultCategory;
@@ -40,11 +47,10 @@ const getUserAccount = cache(async () => {
   }
 
   return {
-    user,
+    user: dbUser,
     starling,
     accountId,
     defaultCategory,
-    localAccount,
   };
 });
 
