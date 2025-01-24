@@ -16,8 +16,12 @@ export default async function Home(props: {
   searchParams: Promise<Record<string, string>>;
 }) {
   const searchParams = await props.searchParams;
-  const { user, starling, accountId, localAccount, defaultCategory } =
-    await getUserAccount();
+  const { user, starling, accountId, defaultCategory } = await getUserAccount();
+
+  const userSettings = (await db.userSettings.findFirst({
+    where: { userId: user.id },
+    select: { monthBarrierOption: true, day: true },
+  })) ?? { monthBarrierOption: "CALENDAR", day: 1 };
 
   const offset = parseInt(searchParams.offset ?? "0");
   const filterBy = searchParams.filterBy ?? "";
@@ -27,8 +31,8 @@ export default async function Home(props: {
 
   const { start, end } = getStartAndEndOfMonth(
     date,
-    localAccount.monthBarrier,
-    localAccount.day,
+    userSettings.monthBarrierOption,
+    userSettings.day,
     offset,
   );
 
@@ -116,7 +120,7 @@ export default async function Home(props: {
 
   return (
     <main className="flex flex-col gap-4 p-4">
-      <LogoutForm user={user} />
+      <LogoutForm user={user} showSettings />
       <div className="flex items-center justify-between gap-2">
         <div className="flex gap-1">
           <DateDisplay date={start} /> - {<DateDisplay date={end} />}

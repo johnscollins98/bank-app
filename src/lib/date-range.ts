@@ -1,4 +1,4 @@
-import { Account } from "./accounts";
+import { MonthBarrierOption } from "@prisma/client";
 
 export interface StartAndEndDate {
   start: Date;
@@ -7,15 +7,15 @@ export interface StartAndEndDate {
 
 export function getStartAndEndOfMonth(
   date: Date,
-  monthBarrier: Account["monthBarrier"],
+  monthBarrier: MonthBarrierOption,
   day: number,
   offset: number,
 ): StartAndEndDate {
-  if (monthBarrier === "last") {
+  if (monthBarrier === "LAST") {
     return getBasedOnLastPayDay(date, day, offset);
   }
 
-  if (monthBarrier === "calendar") {
+  if (monthBarrier === "CALENDAR") {
     return getBasedOnCalendar(date, day, offset);
   }
 

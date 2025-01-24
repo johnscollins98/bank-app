@@ -7,19 +7,11 @@ const budgetSchema = z
 
 export type Budgets = z.infer<typeof budgetSchema>;
 
-const accountSchema = z.object({
-  email: z.string().email(),
-  apiToken: z.string(),
-  monthBarrier: z.enum(["last", "calendar"]),
-  day: z.number(),
-  budgets: budgetSchema,
-});
+const accountsSchema = z.record(z.string().email(), z.string());
 
-const accountsSchema = z.array(accountSchema);
+export type Accounts = z.infer<typeof accountsSchema>;
 
-export type Account = z.infer<typeof accountSchema>;
-
-export const getAccounts = (): Account[] => {
+export const getAccounts = (): Accounts => {
   if (!process.env.ACCOUNTS) throw new Error("Accounts not defined");
   return accountsSchema.parse(JSON.parse(process.env.ACCOUNTS));
 };
