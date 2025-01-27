@@ -12,22 +12,22 @@ export const setBudget = protectedAction(
     category: z.enum([...SPENDING_CATEGORIES, "total"]),
     date: z.date().optional(),
   }),
-  async ({ amount, category, date }, { accountId }) => {
+  async ({ amount, category, date }, { user }) => {
     if (date) {
       await db.budgetOverride.upsert({
         create: {
           amount,
           category,
           date,
-          accountId,
+          userId: user.id,
         },
         update: {
           amount,
         },
         where: {
-          accountId_category_date: {
+          userId_category_date: {
             category,
-            accountId,
+            userId: user.id,
             date,
           },
         },
@@ -37,15 +37,15 @@ export const setBudget = protectedAction(
         create: {
           amount,
           category,
-          accountId,
+          userId: user.id,
         },
         update: {
           amount,
         },
         where: {
-          category_accountId: {
+          userId_category: {
             category,
-            accountId,
+            userId: user.id,
           },
         },
       });
@@ -60,13 +60,13 @@ export const removeBudget = protectedAction(
     category: z.enum([...SPENDING_CATEGORIES, "total"]),
     date: z.date().optional(),
   }),
-  async ({ category, date }, { accountId }) => {
+  async ({ category, date }, { user }) => {
     if (date) {
       const res = await db.budgetOverride.deleteMany({
         where: {
           category,
           date,
-          accountId,
+          userId: user.id,
         },
       });
 
@@ -78,7 +78,7 @@ export const removeBudget = protectedAction(
 
     await db.budget.delete({
       where: {
-        category_accountId: { category, accountId },
+        userId_category: { category, userId: user.id },
       },
     });
 

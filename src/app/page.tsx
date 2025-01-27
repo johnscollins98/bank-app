@@ -79,10 +79,10 @@ export default async function Home(props: {
   const balance = await starling.getBalance(accountId);
 
   const defaultBudgets = await db.budget.findMany({
-    where: { accountId },
+    where: { userId: user.id },
   });
   const budgetOverrides = await db.budgetOverride.findMany({
-    where: { accountId, date: start },
+    where: { userId: user.id, date: start },
   });
 
   const budgets = (

@@ -9,31 +9,27 @@ datasource db {
 
 model Budget {
   id        Int      @id @default(autoincrement())
-  accountId String
   category  String
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
 
   @@unique([userId, category], map: "category_user_id_unique")
-  @@unique([category, accountId], map: "category_account_id_unique")
 }
 
 model BudgetOverride {
   id        Int      @id @default(autoincrement())
-  accountId String
   category  String
   amount    Float
   date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
 
   @@unique([userId, category, date], map: "category_user_id_date_unique")
-  @@unique([accountId, category, date], map: "category_account_id_date_unique")
 }
 
 model UserSettings {
