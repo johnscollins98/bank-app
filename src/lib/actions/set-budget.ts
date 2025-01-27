@@ -19,15 +19,15 @@ export const setBudget = protectedAction(
           amount,
           category,
           date,
-          userId: accountId,
+          accountId,
         },
         update: {
           amount,
         },
         where: {
-          userId_category_date: {
+          accountId_category_date: {
             category,
-            userId: accountId,
+            accountId,
             date,
           },
         },
@@ -37,15 +37,15 @@ export const setBudget = protectedAction(
         create: {
           amount,
           category,
-          userId: accountId,
+          accountId,
         },
         update: {
           amount,
         },
         where: {
-          category_userId: {
+          category_accountId: {
             category,
-            userId: accountId,
+            accountId,
           },
         },
       });
@@ -66,7 +66,7 @@ export const removeBudget = protectedAction(
         where: {
           category,
           date,
-          userId: accountId,
+          accountId,
         },
       });
 
@@ -78,7 +78,7 @@ export const removeBudget = protectedAction(
 
     await db.budget.delete({
       where: {
-        category_userId: { category, userId: accountId },
+        category_accountId: { category, accountId },
       },
     });
 
