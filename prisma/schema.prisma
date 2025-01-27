@@ -13,7 +13,7 @@ model Budget {
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@unique([userId, category], map: "category_user_id_unique")
@@ -26,7 +26,7 @@ model BudgetOverride {
   date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@unique([userId, category, date], map: "category_user_id_date_unique")
@@ -37,7 +37,7 @@ model UserSettings {
   monthBarrierOption MonthBarrierOption
   day                Int
   userId             String             @unique
-  User               User               @relation(fields: [userId], references: [id])
+  User               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum MonthBarrierOption {
