@@ -2,9 +2,10 @@
 
 import { User } from "@/lib/user";
 import { Button } from "@nextui-org/button";
+import { Tooltip } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdSettings } from "react-icons/md";
 
 export default function LogoutForm({
   user,
@@ -14,18 +15,30 @@ export default function LogoutForm({
   showSettings?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between">
-      Hello, {user.name?.split(" ")[0]}
-      <div className="flex gap-2">
-        {showSettings && (
-          <Button as={Link} href="/settings" size="sm">
-            Settings
+    <div className="flex gap-2">
+      {showSettings && (
+        <Tooltip content="Settings">
+          <Button
+            as={Link}
+            href="/settings"
+            size="sm"
+            className="min-w-0"
+            aria-label="Settings"
+          >
+            <MdSettings />
           </Button>
-        )}
-        <Button size="sm" onPress={() => signOut()}>
+        </Tooltip>
+      )}
+      <Tooltip content="Log out">
+        <Button
+          size="sm"
+          onPress={() => signOut()}
+          className="min-w-0"
+          aria-label="Log out"
+        >
           <MdLogout />
         </Button>
-      </div>
+      </Tooltip>
     </div>
   );
 }

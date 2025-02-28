@@ -120,11 +120,8 @@ export default async function Home(props: {
 
   return (
     <main className="flex flex-col gap-4 p-4">
-      <LogoutForm user={user} showSettings />
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex gap-1">
-          <DateDisplay date={start} /> - {<DateDisplay date={end} />}
-        </div>
+      <div className="flex justify-between">
+        <LogoutForm user={user} showSettings />
         <div className="flex gap-1">
           <Button
             size="sm"
@@ -135,7 +132,7 @@ export default async function Home(props: {
             <FaArrowLeft />
           </Button>
           <Button size="sm" as={Link} href={`.?${createRedirectLink(0)}`}>
-            Today
+            <DateDisplay date={start} /> - {<DateDisplay date={end} />}
           </Button>
           <Button
             size="sm"
