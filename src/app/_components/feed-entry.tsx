@@ -6,7 +6,7 @@ import { SpendingCategory, Transactions } from "@/lib/starling-types";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/modal";
-import { useOptimistic, useState } from "react";
+import { startTransition, useOptimistic, useState } from "react";
 import DateDisplay from "./date";
 import TimeDisplay from "./time";
 
@@ -30,7 +30,9 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
   };
 
   const updateCategoryHandler = async (category: SpendingCategory) => {
-    updateOptimisticFeedItem({ ...feedItem, spendingCategory: category });
+    startTransition(() => {
+      updateOptimisticFeedItem({ ...feedItem, spendingCategory: category });
+    });
     closeModal();
     await setCategory({ category, transactionId: feedItem.feedItemUid });
   };
