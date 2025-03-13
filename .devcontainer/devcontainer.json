@@ -13,7 +13,7 @@
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/bank-app",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -31,8 +31,8 @@
     }
   },
   "features": {
-    "ghcr.io/cirolosapio/devcontainers-features/alpine-ohmyzsh:0": {},
-    "ghcr.io/cirolosapio/devcontainers-features/alpine-git:0": {}
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {}
   }
 
   // Features to add to the dev container. More info: https://containers.dev/features.
