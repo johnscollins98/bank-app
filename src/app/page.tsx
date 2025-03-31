@@ -43,7 +43,7 @@ export default async function Home(props: {
     defaultCategory,
   );
   const filteredTransactions = transactions.feedItems.filter(
-    (i) => i.status !== "UPCOMING" && i.status !== "DECLINED",
+    (i) => i.status !== "DECLINED",
   );
   const feedItems = filteredTransactions
     .filter((item) => filterBy === "" || item.spendingCategory === filterBy)
@@ -71,9 +71,16 @@ export default async function Home(props: {
         ...total,
         total: total.total + value,
         [category]: (total[category] ?? 0) + value,
+        upcoming:
+          transaction.status === "UPCOMING"
+            ? total.upcoming + value
+            : total.upcoming,
       };
     },
-    { total: 0 } as Record<SpendingCategory | "total", number>,
+    { total: 0, upcoming: 0 } as Record<
+      SpendingCategory | "total" | "upcoming",
+      number
+    >,
   );
 
   const balance = await starling.getBalance(accountId);
@@ -85,17 +92,13 @@ export default async function Home(props: {
     where: { userId: user.id, date: start },
   });
 
-  const budgets = (
-    await Promise.all(
-      [...SPENDING_CATEGORIES, "total"].map(async (category) => {
-        const override = budgetOverrides.find((o) => o.category === category);
-        const defaultBudget = defaultBudgets.find(
-          (b) => b.category === category,
-        );
-        return override ? { ...override, isOverride: true } : defaultBudget;
-      }),
-    )
-  ).filter((b) => b !== undefined);
+  const budgets = [...SPENDING_CATEGORIES, "total"]
+    .map((category) => {
+      const override = budgetOverrides.find((o) => o.category === category);
+      const defaultBudget = defaultBudgets.find((b) => b.category === category);
+      return override ? { ...override, isOverride: true } : defaultBudget;
+    })
+    .filter((b) => b !== undefined);
 
   const balancePennies = balance.effectiveBalance.minorUnits;
 
@@ -116,7 +119,7 @@ export default async function Home(props: {
           : Math.min(0, remainingBalance);
 
       return bal + clampedRemainingBalance;
-    }, balancePennies) / 100;
+    }, balancePennies + totals.upcoming) / 100;
 
   return (
     <main className="flex flex-col gap-4 p-4">
