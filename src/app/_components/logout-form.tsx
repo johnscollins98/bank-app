@@ -23,6 +23,7 @@ export default function LogoutForm({
             href="/settings"
             size="sm"
             className="min-w-0"
+            prefetch
             aria-label="Settings"
           >
             <MdSettings />

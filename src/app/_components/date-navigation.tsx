@@ -33,16 +33,18 @@ export const DateNavigation = ({ start, end }: Props) => {
         size="sm"
         className="min-w-0"
         as={Link}
+        prefetch
         href={`.?${createRedirectLink(offset - 1)}`}
       >
         <FaArrowLeft />
       </Button>
-      <Button size="sm" as={Link} href={`.?${createRedirectLink(0)}`}>
+      <Button size="sm" as={Link} prefetch href={`.?${createRedirectLink(0)}`}>
         <DateDisplay date={start} /> - {<DateDisplay date={end} />}
       </Button>
       <Button
         size="sm"
         as={Link}
+        prefetch
         className="min-w-0"
         href={`.?${createRedirectLink(offset + 1)}`}
       >

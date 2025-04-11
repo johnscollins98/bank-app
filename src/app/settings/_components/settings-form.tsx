@@ -101,7 +101,7 @@ export const SettingsForm = ({
         </Select>
       )}
       <div className="flex items-center gap-2">
-        <Button as={Link} href="/" className="flex gap-2">
+        <Button as={Link} href="/" prefetch className="flex gap-2">
           <CgArrowLeft />
           Home Page
         </Button>
