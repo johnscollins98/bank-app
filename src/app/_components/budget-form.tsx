@@ -18,7 +18,7 @@ import { FormEventHandler, useEffect, useState } from "react";
 
 export interface Props {
   budgets: (Budget & { isOverride?: boolean })[];
-  filterBy?: string;
+  filterBy: string | null;
   startDate: Date;
 }
 

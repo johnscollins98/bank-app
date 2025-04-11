@@ -11,10 +11,9 @@ import getUserAccount from "@/lib/user";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import Categories from "./_components/categories";
 import DateDisplay from "./_components/date";
-import FeedEntry from "./_components/feed-entry";
 import LogoutForm from "./_components/logout-form";
+import { TransactionFeed } from "./_components/transaction-feed";
 
 export default async function Home(props: {
   searchParams: Promise<Record<string, string>>;
@@ -28,7 +27,6 @@ export default async function Home(props: {
   };
 
   const offset = parseInt(searchParams.offset ?? "0");
-  const filterBy = searchParams.filterBy ?? "";
 
   const date = new Date(Date.now());
   date.setHours(0, 0, 0, 0);
@@ -46,11 +44,8 @@ export default async function Home(props: {
     end,
     defaultCategory,
   );
-  const filteredTransactions = transactions.feedItems.filter(
-    (i) => i.status !== "DECLINED",
-  );
-  const feedItems = filteredTransactions
-    .filter((item) => filterBy === "" || item.spendingCategory === filterBy)
+  const feedItems = transactions.feedItems
+    .filter((i) => i.status !== "DECLINED")
     .toSorted(
       (a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime),
     );
@@ -63,7 +58,7 @@ export default async function Home(props: {
 
   const orderedCategories = orderCategoriesByPopularity(feedItems);
 
-  const totals = filteredTransactions.reduce(
+  const totals = feedItems.reduce(
     (total, transaction) => {
       const value =
         transaction.direction === "IN"
@@ -153,21 +148,13 @@ export default async function Home(props: {
           <BalanceDisplay amount={balanceAfterBudget} label="After Budget" />
         )}
       </div>
-      <Categories
-        searchParams={searchParams}
-        totals={totals}
+      <TransactionFeed
         budgets={budgets}
-        startDate={start}
+        categories={orderedCategories}
+        feedItems={feedItems}
+        start={start}
+        totals={totals}
       />
-      <div className="flex flex-1 flex-col">
-        {feedItems.map((feedItem) => (
-          <FeedEntry
-            key={feedItem.feedItemUid}
-            feedItem={feedItem}
-            orderedCategories={orderedCategories}
-          />
-        ))}
-      </div>
     </main>
   );
 }

@@ -10,26 +10,28 @@ import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Progress } from "@nextui-org/progress";
 import { Tooltip } from "@nextui-org/tooltip";
 import { Budget } from "@prisma/client";
-import Link from "next/link";
 import { BudgetForm } from "./budget-form";
-
-type Totals = Record<SpendingCategory | "total", number>;
+import {
+  BudgetsWithOverride,
+  SpendingCategoryWithTotal,
+  Totals,
+} from "./transaction-feed";
 
 interface Props {
-  searchParams: Record<string, string>;
+  filterBy: SpendingCategory | null;
+  setFilterBy: (v: SpendingCategory | null) => void;
   totals: Totals;
-  budgets: (Budget & { isOverride?: boolean })[];
+  budgets: BudgetsWithOverride;
   startDate: Date;
 }
 
 export default function Categories({
-  searchParams,
+  filterBy,
+  setFilterBy,
   totals,
   budgets,
   startDate,
 }: Props) {
-  const { filterBy } = searchParams;
-
   return (
     <Accordion>
       <AccordionItem title="Spending Summary">
@@ -39,7 +41,7 @@ export default function Categories({
               totals={totals}
               category="total"
               filterBy={filterBy}
-              searchParams={searchParams}
+              setFilterBy={setFilterBy}
               budgets={budgets}
             />
             {SPENDING_CATEGORIES.filter(
@@ -54,8 +56,8 @@ export default function Categories({
                   key={category}
                   totals={totals}
                   budgets={budgets}
-                  searchParams={searchParams}
                   filterBy={filterBy}
+                  setFilterBy={setFilterBy}
                 />
               ))}
           </div>
@@ -81,7 +83,7 @@ const BudgetPercent = ({
   budgets,
   totals,
 }: {
-  filterBy?: string;
+  filterBy: string | null;
   budgets: Budget[];
   totals: Totals;
 }) => {
@@ -174,14 +176,14 @@ const CategoryChip = ({
   category,
   totals,
   budgets,
-  searchParams,
   filterBy,
+  setFilterBy,
 }: {
-  category: SpendingCategory | "total";
+  category: SpendingCategoryWithTotal;
   totals: Totals;
   budgets: Budget[];
-  filterBy?: string;
-  searchParams: Record<string, string>;
+  filterBy: SpendingCategory | null;
+  setFilterBy: (v: SpendingCategory | null) => void;
 }) => {
   const budget = budgets.find((b) => b.category === category)?.amount;
   const total = (totals[category] ?? 0) / 100;
@@ -224,14 +226,11 @@ const CategoryChip = ({
   const CategoryIcon =
     category === "total" ? undefined : CategoryIcons[category];
 
+  const categoryOnClick =
+    filterBy === category || category === "total" ? null : category;
+
   return (
-    <Link
-      passHref
-      href={`.?${new URLSearchParams({
-        ...searchParams,
-        filterBy: filterBy === searchParamKey ? "" : searchParamKey,
-      })}`}
-    >
+    <button onClick={() => setFilterBy(categoryOnClick)}>
       <Tooltip content={tooltipString} closeDelay={0}>
         <div
           color={category === filterBy ? "primary" : "default"}
@@ -253,6 +252,6 @@ const CategoryChip = ({
           </div>
         </div>
       </Tooltip>
-    </Link>
+    </button>
   );
 };
