@@ -1,8 +1,13 @@
 "use client";
 
-import { SpendingCategory, Transactions } from "@/lib/starling-types";
+import {
+  SPENDING_CATEGORIES,
+  SpendingCategory,
+  Transactions,
+} from "@/lib/starling-types";
 import { type Budget } from "@prisma/client";
-import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { z } from "zod";
 import Categories from "./categories";
 import FeedEntry from "./feed-entry";
 
@@ -18,6 +23,8 @@ interface Props {
   start: Date;
 }
 
+const categorySchema = z.enum(SPENDING_CATEGORIES);
+
 export const TransactionFeed = ({
   totals,
   budgets,
@@ -25,7 +32,22 @@ export const TransactionFeed = ({
   categories,
   feedItems,
 }: Props) => {
-  const [category, setCategory] = useState<SpendingCategory | null>(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const category =
+    categorySchema.safeParse(searchParams.get("filterBy")).data ?? null;
+
+  const setCategory = (category: SpendingCategory | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category) {
+      params.set("filterBy", category);
+    } else {
+      params.delete("filterBy");
+    }
+    const url = `${pathname}?${params}`;
+    window.history.replaceState(null, "", url);
+  };
+
   const filteredItems = category
     ? feedItems.filter((i) => i.spendingCategory === category)
     : feedItems;

@@ -8,10 +8,7 @@ import {
 import { getUserSettingsCached } from "@/lib/queries/user-settings";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
-import { Button } from "@nextui-org/button";
-import Link from "next/link";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import DateDisplay from "./_components/date";
+import { DateNavigation } from "./_components/date-navigation";
 import LogoutForm from "./_components/logout-form";
 import { TransactionFeed } from "./_components/transaction-feed";
 
@@ -49,12 +46,6 @@ export default async function Home(props: {
     .toSorted(
       (a, b) => Date.parse(b.transactionTime) - Date.parse(a.transactionTime),
     );
-
-  const createRedirectLink = (newOffset: number) =>
-    new URLSearchParams({
-      ...searchParams,
-      offset: newOffset.toString(),
-    }).toString();
 
   const orderedCategories = orderCategoriesByPopularity(feedItems);
 
@@ -120,27 +111,7 @@ export default async function Home(props: {
     <main className="flex flex-col gap-4 p-4">
       <div className="flex justify-between">
         <LogoutForm user={user} showSettings />
-        <div className="flex gap-1">
-          <Button
-            size="sm"
-            className="min-w-0"
-            as={Link}
-            href={`.?${createRedirectLink(offset - 1)}`}
-          >
-            <FaArrowLeft />
-          </Button>
-          <Button size="sm" as={Link} href={`.?${createRedirectLink(0)}`}>
-            <DateDisplay date={start} /> - {<DateDisplay date={end} />}
-          </Button>
-          <Button
-            size="sm"
-            as={Link}
-            className="min-w-0"
-            href={`.?${createRedirectLink(offset + 1)}`}
-          >
-            <FaArrowRight />
-          </Button>
-        </div>
+        <DateNavigation start={start} end={end} />
       </div>
       <div className="flex items-center justify-between">
         <BalanceDisplay amount={balancePennies / 100} label="Balance" />
