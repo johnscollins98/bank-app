@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { db } from "../db";
 import { SPENDING_CATEGORIES } from "../starling-types";
@@ -32,6 +32,7 @@ export const setBudget = protectedAction(
           },
         },
       });
+      revalidateTag("budgetOverride");
     } else {
       await db.budget.upsert({
         create: {
@@ -49,6 +50,7 @@ export const setBudget = protectedAction(
           },
         },
       });
+      revalidateTag("budget");
     }
 
     revalidatePath("/");
@@ -71,6 +73,7 @@ export const removeBudget = protectedAction(
       });
 
       if (res.count !== 0) {
+        revalidateTag("budgetOverride");
         revalidatePath("/");
         return;
       }
@@ -82,6 +85,7 @@ export const removeBudget = protectedAction(
       },
     });
 
+    revalidateTag("budget");
     revalidatePath("/");
   },
 );

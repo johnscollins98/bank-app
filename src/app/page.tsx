@@ -1,7 +1,11 @@
 import { formatAsGBP } from "@/lib/currency-format";
 import { getStartAndEndOfMonth } from "@/lib/date-range";
-import { db } from "@/lib/db";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
+import {
+  getBudgetOverridesForUserCached,
+  getDefaultBudgetsForUserCached,
+} from "@/lib/queries/budgets";
+import { getUserSettingsCached } from "@/lib/queries/user-settings";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
 import { Button } from "@nextui-org/button";
@@ -18,10 +22,10 @@ export default async function Home(props: {
   const searchParams = await props.searchParams;
   const { user, starling, accountId, defaultCategory } = await getUserAccount();
 
-  const userSettings = (await db.userSettings.findFirst({
-    where: { userId: user.id },
-    select: { monthBarrierOption: true, day: true },
-  })) ?? { monthBarrierOption: "CALENDAR", day: 1 };
+  const userSettings = (await getUserSettingsCached(user.id)) ?? {
+    monthBarrierOption: "CALENDAR",
+    day: 1,
+  };
 
   const offset = parseInt(searchParams.offset ?? "0");
   const filterBy = searchParams.filterBy ?? "";
@@ -85,12 +89,8 @@ export default async function Home(props: {
 
   const balance = await starling.getBalance(accountId);
 
-  const defaultBudgets = await db.budget.findMany({
-    where: { userId: user.id },
-  });
-  const budgetOverrides = await db.budgetOverride.findMany({
-    where: { userId: user.id, date: start },
-  });
+  const defaultBudgets = await getDefaultBudgetsForUserCached(user.id);
+  const budgetOverrides = await getBudgetOverridesForUserCached(user.id, start);
 
   const budgets = [...SPENDING_CATEGORIES, "total"]
     .map((category) => {
