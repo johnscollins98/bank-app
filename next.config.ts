@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
       dynamic: 30,
     },
   },
+  logging: {
+    fetches:
+      process.env.NODE_ENV === "development"
+        ? {
+            fullUrl: false,
+          }
+        : undefined,
+  },
 };
 
 export default nextConfig;
