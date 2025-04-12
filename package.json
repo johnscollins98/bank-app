@@ -2,10 +2,6 @@
   "name": "starling-app",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "22"
-  },
-  "packageManager": "bun@1.2.2",
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
@@ -31,11 +27,12 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@types/node": "^22.14.1",
     "@types/react": "19.1.1",
     "@types/react-dom": "19.1.2",
     "autoprefixer": "^10.4.21",
-    "eslint": "^8.57.1",
+    "eslint": "^9.24.0",
     "eslint-config-next": "15.3.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
@@ -43,9 +40,5 @@
     "prisma": "^6.6.0",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2"
   }
 }

@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   return (
     <div className="p-4">
       {/* TODO - this should really be in a layout */}
-      <LogoutForm user={user} />
+      <LogoutForm />
       <SettingsForm userSettings={settings} />
     </div>
   );

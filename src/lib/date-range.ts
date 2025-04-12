@@ -100,7 +100,7 @@ function getBasedOnCalendar(
 }
 
 function lastDayOfMonth(dayIndex: number, year: number, month: number) {
-  var lastDay = new Date(year, month + 1, 0);
+  const lastDay = new Date(year, month + 1, 0);
   if (lastDay.getDay() < dayIndex) {
     lastDay.setDate(lastDay.getDate() - 7);
   }

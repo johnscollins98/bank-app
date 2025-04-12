@@ -110,7 +110,7 @@ export default async function Home(props: {
   return (
     <main className="flex flex-col gap-4 p-4">
       <div className="flex justify-between">
-        <LogoutForm user={user} showSettings />
+        <LogoutForm showSettings />
         <DateNavigation start={start} end={end} />
       </div>
       <div className="flex items-center justify-between">
