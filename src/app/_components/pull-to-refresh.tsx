@@ -1,5 +1,5 @@
 "use client";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { usePullToRefresh } from "use-pull-to-refresh";
 

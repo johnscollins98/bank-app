@@ -5,7 +5,7 @@ import {
   UserSettingsSchema,
 } from "@/lib/actions/user-settings/dtos";
 import setUserSettings from "@/lib/actions/user-settings/set-user-settings";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { MonthBarrierOption } from "@prisma/client";
 import Link from "next/link";
 import { FormEventHandler, useEffect, useMemo, useState } from "react";

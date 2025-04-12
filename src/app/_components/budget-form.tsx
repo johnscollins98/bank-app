@@ -2,17 +2,17 @@
 
 import { removeBudget, setBudget } from "@/lib/actions/set-budget";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
-import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
-import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
-import { Input } from "@nextui-org/input";
+import { Autocomplete, AutocompleteItem } from "@heroui/autocomplete";
+import { Button } from "@heroui/button";
+import { Checkbox } from "@heroui/checkbox";
+import { Input } from "@heroui/input";
 import {
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
-} from "@nextui-org/modal";
+} from "@heroui/modal";
 import { Budget } from "@prisma/client";
 import { FormEventHandler, useEffect, useState } from "react";
 
@@ -144,7 +144,7 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                   }
                 >
                   {[...SPENDING_CATEGORIES, "total"].map((c) => (
-                    <AutocompleteItem value={c} key={c}>
+                    <AutocompleteItem textValue={c} key={c}>
                       {formatCategoryString(c)}
                     </AutocompleteItem>
                   ))}

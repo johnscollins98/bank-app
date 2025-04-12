@@ -6,9 +6,9 @@ import {
   SPENDING_CATEGORIES,
   SpendingCategory,
 } from "@/lib/starling-types";
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
-import { Progress } from "@nextui-org/progress";
-import { Tooltip } from "@nextui-org/tooltip";
+import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Progress } from "@heroui/progress";
+import { Tooltip } from "@heroui/tooltip";
 import { Budget } from "@prisma/client";
 import { BudgetForm } from "./budget-form";
 import {
