@@ -7,7 +7,7 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array). The sample below assumes your primary file is in the root of your project.
     #
-    image: oven/bun:1.2.2-slim
+    image: oven/bun:1.2.9-slim
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
       - ..:/bank-app:cached
