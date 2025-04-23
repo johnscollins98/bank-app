@@ -35,7 +35,8 @@ RUN addgroup --system --gid 1002 nodejs
 RUN adduser --system --uid 1002 nextjs
 USER nextjs
 
-COPY --from=builder /app/public ./public
+COPY prisma ./prisma
+COPY public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
