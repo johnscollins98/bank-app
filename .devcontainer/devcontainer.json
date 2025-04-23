@@ -33,7 +33,9 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {}
-  }
+  },
+
+  "containerUser": "node"
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},

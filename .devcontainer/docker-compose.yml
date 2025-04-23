@@ -7,12 +7,10 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array). The sample below assumes your primary file is in the root of your project.
     #
-    image: oven/bun:1.2.10-slim
+    image: node:22-slim
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
       - ..:/bank-app:cached
-      - bank-app-node-modules:/bank-app/node_modules
-      - bank-app-next:/bank-app/.next
 
     depends_on:
       db:
@@ -47,5 +45,3 @@ services:
 
 volumes:
   pgdata:
-  bank-app-node-modules:
-  bank-app-next:

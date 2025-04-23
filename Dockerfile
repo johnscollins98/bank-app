@@ -1,13 +1,13 @@
-FROM oven/bun:1.2.10-alpine AS base
+FROM node:22-alpine AS base
 
 FROM base AS builder
 
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json bun.lock ./
+COPY package.json package-lock.json ./
 # Omit --production flag for TypeScript devDependencies
-RUN bun install --frozen-lockfile
+RUN npm install --frozen-lockfile
 
 COPY src ./src
 COPY public ./public
@@ -21,10 +21,10 @@ COPY tailwind.config.ts .
 # Uncomment the following line to disable telemetry at build time
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN bun prisma generate
+RUN npx prisma generate
 
 # Build Next.js based on the preferred package manager
-RUN bun run build
+RUN npm run build
 
 FROM base AS runner
 
