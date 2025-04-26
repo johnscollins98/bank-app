@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@/app/_components/link";
 import {
   UserSettingsDto,
   UserSettingsSchema,
@@ -7,7 +8,6 @@ import {
 import setUserSettings from "@/lib/actions/user-settings/set-user-settings";
 import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { MonthBarrierOption } from "@prisma/client";
-import Link from "next/link";
 import { FormEventHandler, useEffect, useMemo, useState } from "react";
 import { CgArrowLeft } from "react-icons/cg";
 

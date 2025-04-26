@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GlobalPageLoader } from "./_components/global-page-loader";
 import { PullToRefresh } from "./_components/pull-to-refresh";
 import { Theme } from "./_components/Theme";
 import "./globals.css";
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="flex flex-col">
         <Providers>
           <PullToRefresh />
+          <GlobalPageLoader />
           <Theme>{children}</Theme>
         </Providers>
       </body>

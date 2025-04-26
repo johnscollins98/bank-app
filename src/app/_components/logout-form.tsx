@@ -3,8 +3,8 @@
 import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/react";
 import { signOut } from "next-auth/react";
-import Link from "next/link";
 import { MdLogout, MdSettings } from "react-icons/md";
+import { Link } from "./link";
 
 export default function LogoutForm({
   showSettings = false,

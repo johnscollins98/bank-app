@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@heroui/react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import DateDisplay from "./date";
+import { Link } from "./link";
 
 interface Props {
   start: Date;
