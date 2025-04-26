@@ -31,7 +31,7 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className="flex flex-col">
+      <body className="relative flex flex-col">
         <Providers>
           <PullToRefresh />
           <GlobalPageLoader />

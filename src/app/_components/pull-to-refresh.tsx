@@ -21,7 +21,7 @@ export const PullToRefresh = () => {
         top: (isRefreshing ? REFRESH_THRESHOLD : pullPosition) / 3,
         opacity: isRefreshing || pullPosition > 0 ? 1 : 0,
       }}
-      className="z-99 fixed inset-x-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-default-100 p-2 shadow"
+      className="z-99 absolute inset-x-1/2 h-8 w-8 -translate-x-1/2 rounded-full bg-default-100 p-2 shadow"
     >
       <div className={`flex h-full w-full items-center justify-center`}>
         <Spinner size="sm" />
