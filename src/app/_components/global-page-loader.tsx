@@ -9,8 +9,10 @@ export const GlobalPageLoader = () => {
   if (!loading) return null;
 
   return (
-    <div className="z-99 absolute inset-x-1/2 top-5 -translate-x-1/2">
-      <Spinner size="sm" />
+    <div className="absolute z-[99] w-full py-[inherit] md:top-5">
+      <div className="flex justify-center">
+        <Spinner size="sm" />
+      </div>
     </div>
   );
 };
