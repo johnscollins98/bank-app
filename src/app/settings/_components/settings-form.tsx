@@ -6,7 +6,7 @@ import {
   UserSettingsSchema,
 } from "@/lib/actions/user-settings/dtos";
 import setUserSettings from "@/lib/actions/user-settings/set-user-settings";
-import { Button, Input, Select, SelectItem, Spinner } from "@heroui/react";
+import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { MonthBarrierOption } from "@prisma/client";
 import {
   FormEventHandler,
@@ -121,8 +121,9 @@ export const SettingsForm = ({
           type="submit"
           color="primary"
           isDisabled={!validation.success || pending}
+          isLoading={pending}
         >
-          {pending ? <Spinner size="sm" color="white" /> : "Submit"}
+          Submit
         </Button>
       </div>
     </form>

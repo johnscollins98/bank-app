@@ -41,7 +41,7 @@ export default function LogoutForm({
           onPress={logoutHandler}
           className="w-9 min-w-9"
           aria-label="Log out"
-          disabled={loggingOut}
+          isDisabled={loggingOut}
         >
           {loggingOut ? <Spinner size="sm" /> : <MdLogout />}
         </Button>

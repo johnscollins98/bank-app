@@ -13,7 +13,6 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/modal";
-import { Spinner } from "@heroui/react";
 import { Budget } from "@prisma/client";
 import {
   FormEventHandler,
@@ -43,7 +42,8 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
   const existingBudget = budgets.find((b) => b.category === category);
   const categoryString = formatCategoryString(category);
 
-  const [pending, setPending] = useOptimistic(false);
+  const [submitPending, setSubmitPending] = useOptimistic(false);
+  const [deletePending, setDeletePending] = useOptimistic(false);
 
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [removeWarningOpen, setRemoveWarningOpen] = useState(false);
@@ -64,7 +64,7 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
     e.stopPropagation();
 
     startTransition(async () => {
-      setPending(true);
+      setSubmitPending(true);
       await setBudget({
         amount: parseFloat(amount),
         category: selectedCategory,
@@ -76,11 +76,14 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
   };
 
   const onRemoveBudget = async () => {
-    await removeBudget({
-      category,
-      date: startDate,
+    startTransition(async () => {
+      setDeletePending(true);
+      await removeBudget({
+        category,
+        date: startDate,
+      });
+      setRemoveWarningOpen(false);
     });
-    setRemoveWarningOpen(false);
   };
 
   return (
@@ -113,7 +116,12 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
           <ModalFooter>
             <div className="flex items-center justify-end gap-1">
               <Button onPress={() => setRemoveWarningOpen(false)}>No</Button>
-              <Button color="danger" onPress={onRemoveBudget}>
+              <Button
+                color="danger"
+                onPress={onRemoveBudget}
+                isDisabled={deletePending}
+                isLoading={deletePending}
+              >
                 Yes
               </Button>
             </div>
@@ -181,10 +189,10 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
               <Button
                 type="submit"
                 color="primary"
-                disabled={pending}
-                className="w-18"
+                isDisabled={submitPending}
+                isLoading={submitPending}
               >
-                {pending ? <Spinner size="sm" color="white" /> : "Submit"}
+                Submit
               </Button>
             </ModalFooter>
           </form>

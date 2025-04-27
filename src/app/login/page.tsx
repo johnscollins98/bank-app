@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@heroui/button";
-import { Spinner } from "@heroui/react";
 import { signIn } from "next-auth/react";
 import { startTransition, useOptimistic } from "react";
 
@@ -19,10 +18,10 @@ export default function Login() {
       Please sign in to use this application.
       <Button
         onPress={signInHandler}
-        disabled={signingIn}
-        className="w-24 min-w-24"
+        isDisabled={signingIn}
+        isLoading={signingIn}
       >
-        {signingIn ? <Spinner size="sm" /> : "Sign in"}
+        Sign In
       </Button>
     </div>
   );
