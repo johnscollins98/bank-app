@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { ButtonLink } from "./button-link";
 import DateDisplay from "./date";
-import { Link } from "./link";
 
 interface Props {
   start: Date;
@@ -29,27 +28,28 @@ export const DateNavigation = ({ start, end }: Props) => {
 
   return (
     <div className="flex gap-1">
-      <Button
+      <ButtonLink
         size="sm"
-        className="min-w-0"
-        as={Link}
         prefetch
         href={`.?${createRedirectLink(offset - 1)}`}
       >
         <FaArrowLeft />
-      </Button>
-      <Button size="sm" as={Link} prefetch href={`.?${createRedirectLink(0)}`}>
-        <DateDisplay date={start} /> - {<DateDisplay date={end} />}
-      </Button>
-      <Button
+      </ButtonLink>
+      <ButtonLink
         size="sm"
-        as={Link}
+        className="w-32"
         prefetch
-        className="min-w-0"
+        href={`.?${createRedirectLink(0)}`}
+      >
+        <DateDisplay date={start} /> - {<DateDisplay date={end} />}
+      </ButtonLink>
+      <ButtonLink
+        size="sm"
+        prefetch
         href={`.?${createRedirectLink(offset + 1)}`}
       >
         <FaArrowRight />
-      </Button>
+      </ButtonLink>
     </div>
   );
 };

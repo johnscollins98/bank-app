@@ -1,14 +1,21 @@
 "use client";
 
-import { Link } from "@/app/_components/link";
+import { ButtonLink } from "@/app/_components/button-link";
 import {
   UserSettingsDto,
   UserSettingsSchema,
 } from "@/lib/actions/user-settings/dtos";
 import setUserSettings from "@/lib/actions/user-settings/set-user-settings";
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+import { Button, Input, Select, SelectItem, Spinner } from "@heroui/react";
 import { MonthBarrierOption } from "@prisma/client";
-import { FormEventHandler, useEffect, useMemo, useState } from "react";
+import {
+  FormEventHandler,
+  startTransition,
+  useEffect,
+  useMemo,
+  useOptimistic,
+  useState,
+} from "react";
 import { CgArrowLeft } from "react-icons/cg";
 
 export const SettingsForm = ({
@@ -21,6 +28,8 @@ export const SettingsForm = ({
     useState<MonthBarrierOption>(
       userSettings?.monthBarrierOption ?? "CALENDAR",
     );
+
+  const [pending, setPending] = useOptimistic(false);
 
   const settingsToSave = useMemo(
     () => ({
@@ -44,13 +53,16 @@ export const SettingsForm = ({
     }
   }, [settingsToSave]);
 
-  const onSubmitHandler: FormEventHandler<HTMLFormElement> = async (e) => {
+  const onSubmitHandler: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (validation.success) {
-      await setUserSettings(settingsToSave);
-    }
+    startTransition(async () => {
+      setPending(true);
+      if (validation.success) {
+        await setUserSettings(settingsToSave);
+      }
+    });
   };
 
   return (
@@ -101,12 +113,16 @@ export const SettingsForm = ({
         </Select>
       )}
       <div className="flex items-center gap-2">
-        <Button as={Link} href="/" prefetch className="flex gap-2">
+        <ButtonLink href="/" prefetch className="flex w-32 gap-2">
           <CgArrowLeft />
           Home Page
-        </Button>
-        <Button type="submit" color="primary" isDisabled={!validation.success}>
-          Submit
+        </ButtonLink>
+        <Button
+          type="submit"
+          color="primary"
+          isDisabled={!validation.success || pending}
+        >
+          {pending ? <Spinner size="sm" color="white" /> : "Submit"}
         </Button>
       </div>
     </form>

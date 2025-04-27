@@ -13,8 +13,15 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/modal";
+import { Spinner } from "@heroui/react";
 import { Budget } from "@prisma/client";
-import { FormEventHandler, useEffect, useState } from "react";
+import {
+  FormEventHandler,
+  startTransition,
+  useEffect,
+  useOptimistic,
+  useState,
+} from "react";
 
 export interface Props {
   budgets: (Budget & { isOverride?: boolean })[];
@@ -36,6 +43,8 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
   const existingBudget = budgets.find((b) => b.category === category);
   const categoryString = formatCategoryString(category);
 
+  const [pending, setPending] = useOptimistic(false);
+
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [removeWarningOpen, setRemoveWarningOpen] = useState(false);
   const [amount, setAmount] = useState(existingBudget?.amount.toString() ?? "");
@@ -50,19 +59,20 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
     setSelectedCategory(category);
   }, [category]);
 
-  const setBudgetSubmitHandler: FormEventHandler<HTMLFormElement> = async (
-    e,
-  ) => {
+  const setBudgetSubmitHandler: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    await setBudget({
-      amount: parseFloat(amount),
-      category: selectedCategory,
-      date: singleMonthOnly ? startDate : undefined,
-    });
+    startTransition(async () => {
+      setPending(true);
+      await setBudget({
+        amount: parseFloat(amount),
+        category: selectedCategory,
+        date: singleMonthOnly ? startDate : undefined,
+      });
 
-    setBudgetModalOpen(false);
+      setBudgetModalOpen(false);
+    });
   };
 
   const onRemoveBudget = async () => {
@@ -164,8 +174,13 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
             </ModalBody>
             <ModalFooter>
               <Button type="reset">Cancel</Button>
-              <Button type="submit" color="primary">
-                Submit
+              <Button
+                type="submit"
+                color="primary"
+                disabled={pending}
+                className="w-18"
+              >
+                {pending ? <Spinner size="sm" color="white" /> : "Submit"}
               </Button>
             </ModalFooter>
           </form>
