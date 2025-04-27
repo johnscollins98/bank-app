@@ -149,15 +149,19 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                   isRequired
                   size="lg"
                   selectedKey={selectedCategory}
+                  defaultItems={[...SPENDING_CATEGORIES, "total"].map((c) => ({
+                    label: formatCategoryString(c),
+                    value: c,
+                  }))}
                   onSelectionChange={(v) =>
                     setSelectedCategory(v as SpendingCategory)
                   }
                 >
-                  {[...SPENDING_CATEGORIES, "total"].map((c) => (
-                    <AutocompleteItem textValue={c} key={c}>
-                      {formatCategoryString(c)}
+                  {(item) => (
+                    <AutocompleteItem key={item.value}>
+                      {item.label}
                     </AutocompleteItem>
-                  ))}
+                  )}
                 </Autocomplete>
                 <div className="flex gap-2">
                   <label htmlFor="single-month">
