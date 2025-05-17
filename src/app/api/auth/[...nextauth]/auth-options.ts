@@ -23,13 +23,14 @@ export const authOptions: AuthOptions = {
     }),
   ],
   adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" },
   callbacks: {
-    session({ session, user }) {
+    session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
-          id: user.id,
+          id: token.sub,
         },
       };
     },
