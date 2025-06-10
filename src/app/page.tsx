@@ -1,5 +1,5 @@
 import { formatAsGBP } from "@/lib/currency-format";
-import { getStartAndEndOfMonth } from "@/lib/date-range";
+import { getStartAndEndOfMonth, StartAndEndDate } from "@/lib/date-range";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import {
   getBudgetOverridesForUserCached,
@@ -8,32 +8,54 @@ import {
 import { getUserSettingsCached } from "@/lib/queries/user-settings";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
+import { Suspense } from "react";
 import { DateNavigation } from "./_components/date-navigation";
 import LogoutForm from "./_components/logout-form";
 import { TransactionFeed } from "./_components/transaction-feed";
 
-export default async function Home(props: {
-  searchParams: Promise<Record<string, string>>;
-}) {
-  const searchParams = await props.searchParams;
-  const { user, starling, accountId, defaultCategory } = await getUserAccount();
-
+const getDates = async (offsetStr?: string) => {
+  const { user } = await getUserAccount();
   const userSettings = (await getUserSettingsCached(user.id)) ?? {
     monthBarrierOption: "CALENDAR",
     day: 1,
   };
 
-  const offset = parseInt(searchParams.offset ?? "0");
+  const offset = parseInt(offsetStr ?? "0");
 
   const date = new Date(Date.now());
   date.setHours(0, 0, 0, 0);
 
-  const { start, end } = getStartAndEndOfMonth(
+  return getStartAndEndOfMonth(
     date,
     userSettings.monthBarrierOption,
     userSettings.day,
     offset,
   );
+};
+
+export default async function Home(props: {
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const searchParams = await props.searchParams;
+  const offset = searchParams.offset;
+  const datesPromise = getDates(offset);
+
+  return (
+    <main className="flex flex-col gap-4 p-4">
+      <div className="flex justify-between">
+        <LogoutForm showSettings />
+        <DateNavigation dates={datesPromise} />
+      </div>
+      <Suspense>
+        <PageContent dates={datesPromise} />
+      </Suspense>
+    </main>
+  );
+}
+
+const PageContent = async ({ dates }: { dates: Promise<StartAndEndDate> }) => {
+  const { start, end } = await dates;
+  const { user, starling, accountId, defaultCategory } = await getUserAccount();
 
   const transactions = await starling.getTransactions(
     accountId,
@@ -106,13 +128,8 @@ export default async function Home(props: {
 
       return bal + clampedRemainingBalance;
     }, balancePennies + totals.upcoming) / 100;
-
   return (
-    <main className="flex flex-col gap-4 p-4">
-      <div className="flex justify-between">
-        <LogoutForm showSettings />
-        <DateNavigation start={start} end={end} />
-      </div>
+    <>
       <div className="flex items-center justify-between">
         <BalanceDisplay amount={balancePennies / 100} label="Balance" />
         {balanceAfterBudget && (
@@ -126,9 +143,9 @@ export default async function Home(props: {
         start={start}
         totals={totals}
       />
-    </main>
+    </>
   );
-}
+};
 
 const BalanceDisplay = ({
   amount,
