@@ -9,7 +9,9 @@ export class Starling {
   constructor(private readonly apiKey: string) {}
 
   async getAccounts(): Promise<Accounts> {
-    const res = await this.fetch("accounts");
+    const res = await this.fetch("accounts", undefined, {
+      next: { revalidate: 3600 },
+    });
     return res.json();
   }
 
@@ -69,7 +71,6 @@ export class Starling {
       {
         ...options,
         body: body && JSON.stringify(body),
-        next: { revalidate: 10 },
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
           "Content-Type": "application/json",
