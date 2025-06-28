@@ -47,13 +47,19 @@ export default async function Home(props: {
         <DateNavigation dates={datesPromise} />
       </div>
       <Suspense>
-        <PageContent dates={datesPromise} />
+        <PageContent dates={datesPromise} offset={parseInt(offset ?? "0")} />
       </Suspense>
     </main>
   );
 }
 
-const PageContent = async ({ dates }: { dates: Promise<StartAndEndDate> }) => {
+const PageContent = async ({
+  dates,
+  offset,
+}: {
+  dates: Promise<StartAndEndDate>;
+  offset: number;
+}) => {
   const { start, end } = await dates;
   const { user, starling, accountId, defaultCategory } = await getUserAccount();
 
@@ -132,7 +138,7 @@ const PageContent = async ({ dates }: { dates: Promise<StartAndEndDate> }) => {
     <>
       <div className="flex items-center justify-between">
         <BalanceDisplay amount={balancePennies / 100} label="Balance" />
-        {balanceAfterBudget && (
+        {balanceAfterBudget && offset === 0 && (
           <BalanceDisplay amount={balanceAfterBudget} label="After Budget" />
         )}
       </div>
