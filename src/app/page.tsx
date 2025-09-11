@@ -104,7 +104,7 @@ export default async function Home(props: {
         />
         <Categories budgets={budgets} startDate={start} totals={totals} />
       </div>
-      <div className="px-6">
+      <div className="px-4">
         <TransactionFeed feedItems={feedItems} />
       </div>
     </main>
