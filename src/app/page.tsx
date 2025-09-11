@@ -92,7 +92,7 @@ export default async function Home(props: {
 
   return (
     <main className="flex flex-col gap-4">
-      <div className="bg-gradient-to-br from-cyan-300 to-cyan-600 p-4 drop-shadow dark:from-cyan-900 dark:to-cyan-600">
+      <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-400 pb-4 drop-shadow dark:from-cyan-600 dark:to-cyan-800">
         <div className="flex justify-between">
           <LogoutForm showSettings />
           <DateNavigation dates={datesPromise} />
@@ -104,7 +104,7 @@ export default async function Home(props: {
         />
         <Categories budgets={budgets} startDate={start} totals={totals} />
       </div>
-      <div className="px-4">
+      <div className="pl-safe pr-safe pb-safe">
         <TransactionFeed feedItems={feedItems} />
       </div>
     </main>

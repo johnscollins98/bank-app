@@ -8,7 +8,7 @@ export default async function SettingsPage() {
   const settings = await getUserSettingsCached(user.id);
 
   return (
-    <div className="p-4">
+    <div className="p-safe">
       {/* TODO - this should really be in a layout */}
       <LogoutForm />
       <SettingsForm userSettings={settings} />
