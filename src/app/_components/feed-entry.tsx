@@ -41,7 +41,7 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
     <>
       <div
         onClick={() => setModalOpen(true)}
-        className={`cursor-pointer border-b border-t border-foreground-200 p-3 transition-colors duration-100 hover:bg-foreground-50 ${feedItem.status === "UPCOMING" && "opacity-60"}`}
+        className={`cursor-pointer border-b border-foreground-200 p-3 transition-colors duration-100 last:border-b-0 hover:bg-foreground-50 ${feedItem.status === "UPCOMING" && "opacity-60"}`}
       >
         <div className="flex justify-between">
           <div className="font-bold">{optimisticFeedItem.counterPartyName}</div>
@@ -64,7 +64,7 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
             </div>
             <div>{optimisticFeedItem.reference}</div>
           </div>
-          <div className="flex">
+          <div className="flex gap-0.5">
             <DateDisplay date={new Date(optimisticFeedItem.transactionTime)} />,
             <TimeDisplay date={new Date(optimisticFeedItem.transactionTime)} />
           </div>

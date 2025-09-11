@@ -1,5 +1,6 @@
 "use client";
 
+import { formatAsGBP } from "@/lib/currency-format";
 import {
   SPENDING_CATEGORIES,
   SpendingCategory,
@@ -52,6 +53,26 @@ export const TransactionFeed = ({
     ? feedItems.filter((i) => i.spendingCategory === category)
     : feedItems;
 
+  const groupedByDay = filteredItems.reduce(
+    (groups, item) => {
+      const day = new Date(item.transactionTime).toLocaleDateString(undefined, {
+        dateStyle: "long",
+      });
+
+      const itemsForDay = groups[day] ?? { total: 0, items: [] };
+
+      const toAdd =
+        item.direction === "IN"
+          ? (item.amount.minorUnits / 100) * -1
+          : item.amount.minorUnits / 100;
+      const total = itemsForDay.total + toAdd;
+      const items = [...itemsForDay.items, item];
+
+      return { ...groups, [day]: { total, items } };
+    },
+    {} as Record<string, { total: number; items: Transactions["feedItems"] }>,
+  );
+
   return (
     <>
       <Categories
@@ -61,15 +82,26 @@ export const TransactionFeed = ({
         filterBy={category}
         setFilterBy={setCategory}
       />
-      <div className="flex flex-1 flex-col">
-        {filteredItems.map((feedItem) => (
-          <FeedEntry
-            key={feedItem.feedItemUid}
-            feedItem={feedItem}
-            orderedCategories={categories}
-          />
-        ))}
-      </div>
+      {Object.entries(groupedByDay).map(([title, { total, items }]) => (
+        <div key={title}>
+          <div className="flex items-center justify-between px-1 py-2 text-sm text-foreground-600">
+            <div>{title}</div>
+            <div>
+              {total < 0 && "+ "}
+              {formatAsGBP(Math.abs(total))}
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col rounded-md bg-foreground-100">
+            {items.map((feedItem) => (
+              <FeedEntry
+                key={feedItem.feedItemUid}
+                feedItem={feedItem}
+                orderedCategories={categories}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </>
   );
 };
