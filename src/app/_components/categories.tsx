@@ -10,31 +10,47 @@ import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Progress } from "@heroui/progress";
 import { Tooltip } from "@heroui/tooltip";
 import { Budget } from "@prisma/client";
+import { usePathname, useSearchParams } from "next/navigation";
+import { z } from "zod";
 import { BudgetForm } from "./budget-form";
-import {
-  BudgetsWithOverride,
-  SpendingCategoryWithTotal,
-  Totals,
-} from "./transaction-feed";
+
+export type SpendingCategoryWithTotal = SpendingCategory | "total";
+export type Totals<T extends string = SpendingCategoryWithTotal> = Record<
+  SpendingCategory | T,
+  number
+>;
+export type BudgetsWithOverride = (Budget & { isOverride?: boolean })[];
 
 interface Props {
-  filterBy: SpendingCategory | null;
-  setFilterBy: (v: SpendingCategory | null) => void;
-  totals: Totals;
+  totals: Totals<SpendingCategoryWithTotal>;
   budgets: BudgetsWithOverride;
   startDate: Date;
 }
 
-export default function Categories({
-  filterBy,
-  setFilterBy,
-  totals,
-  budgets,
-  startDate,
-}: Props) {
+export const categorySchema = z.enum(SPENDING_CATEGORIES);
+
+export default function Categories({ totals, budgets, startDate }: Props) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const filterBy =
+    categorySchema.safeParse(searchParams.get("filterBy")).data ?? null;
+  const setFilterBy = (category: SpendingCategory | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category) {
+      params.set("filterBy", category);
+    } else {
+      params.delete("filterBy");
+    }
+    const url = `${pathname}?${params}`;
+    window.history.replaceState(null, "", url);
+  };
+
   return (
     <Accordion>
-      <AccordionItem title="Spending Summary">
+      <AccordionItem
+        title="Spending Summary"
+        classNames={{ indicator: "text-foreground" }}
+      >
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap gap-2">
             <CategoryChip
@@ -234,7 +250,7 @@ const CategoryChip = ({
       <Tooltip content={tooltipString} closeDelay={0}>
         <div
           color={category === filterBy ? "primary" : "default"}
-          className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
+          className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs text-foreground transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
         >
           <div
             className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 0.9 ? "rounded-r-full" : ""} ${budgetColour}`}
