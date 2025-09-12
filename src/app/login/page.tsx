@@ -15,7 +15,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-dvh flex-1 flex-col items-center justify-center gap-10 bg-gradient-to-b from-cyan-600 to-cyan-800 pb-4">
+    <div className="flex h-lvh flex-1 flex-col items-center justify-center gap-10 bg-gradient-to-b from-cyan-600 to-cyan-800 pb-4">
       <div className="flex flex-col gap-3">
         <Image src="/icon.png" alt="icon" width={150} height={150} />
         <div className="text-4xl font-bold text-blue-100">Bank App</div>
