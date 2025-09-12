@@ -92,7 +92,7 @@ export default async function Home(props: {
 
   return (
     <main className="flex flex-col gap-4">
-      <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-400 pb-4 drop-shadow dark:from-cyan-600 dark:to-cyan-800">
+      <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-400 pb-4 shadow-md dark:from-cyan-600 dark:to-cyan-800">
         <div className="flex justify-between">
           <LogoutForm showSettings />
           <DateNavigation dates={datesPromise} />
