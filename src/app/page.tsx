@@ -91,7 +91,7 @@ export default async function Home(props: {
   );
 
   return (
-    <main className="flex flex-col gap-4">
+    <main className="flex min-h-dvh flex-col gap-4">
       <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-800 pb-4 shadow-md">
         <div className="flex justify-between">
           <LogoutForm showSettings />
@@ -104,7 +104,7 @@ export default async function Home(props: {
         />
         <Categories budgets={budgets} startDate={start} totals={totals} />
       </div>
-      <div className="pl-safe pr-safe pb-safe">
+      <div className="pl-safe pr-safe pb-safe flex flex-grow flex-col">
         <TransactionFeed feedItems={feedItems} />
       </div>
     </main>

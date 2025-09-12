@@ -5,6 +5,7 @@ import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import { Transactions } from "@/lib/starling-types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { HiOutlineCash } from "react-icons/hi";
 import { categorySchema } from "./categories";
 import FeedEntry from "./feed-entry";
 
@@ -53,6 +54,17 @@ export const TransactionFeed = ({ feedItems }: Props) => {
   }, [filteredItems]);
 
   const categories = orderCategoriesByPopularity(feedItems);
+
+  if (filteredItems.length === 0) {
+    return (
+      <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 text-3xl text-foreground-500">
+        <div>
+          <HiOutlineCash size={"100px"} />
+        </div>
+        <div>Nothing to see here!</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">

@@ -66,8 +66,8 @@ export const SettingsForm = ({
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className="flex flex-col gap-4">
-      Please enter your settings
+    <form onSubmit={onSubmitHandler} className="flex flex-col gap-5">
+      <div className="text-xl font-semibold">Please enter your settings</div>
       <Select
         label="Calendar Style"
         selectedKeys={[monthBarrierOption]}
@@ -112,7 +112,7 @@ export const SettingsForm = ({
           <SelectItem key="7">Sunday</SelectItem>
         </Select>
       )}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <ButtonLink href="/" prefetch className="flex w-32 gap-2">
           <CgArrowLeft />
           Home Page

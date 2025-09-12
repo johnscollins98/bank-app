@@ -8,10 +8,14 @@ export default async function SettingsPage() {
   const settings = await getUserSettingsCached(user.id);
 
   return (
-    <div className="p-safe">
+    <div>
       {/* TODO - this should really be in a layout */}
-      <LogoutForm />
-      <SettingsForm userSettings={settings} />
+      <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-800 pb-4 shadow-md">
+        <LogoutForm />
+      </div>
+      <div className="pl-safe pr-safe pb-safe pt-4">
+        <SettingsForm userSettings={settings} />
+      </div>
     </div>
   );
 }
