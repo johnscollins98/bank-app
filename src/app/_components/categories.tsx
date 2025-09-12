@@ -49,7 +49,11 @@ export default function Categories({ totals, budgets, startDate }: Props) {
     <Accordion>
       <AccordionItem
         title="Spending Summary"
-        classNames={{ indicator: "text-foreground" }}
+        className="text-background dark:text-foreground"
+        classNames={{
+          indicator: "text-background dark:text-foreground",
+          title: "text-background dark:text-foreground",
+        }}
       >
         <div className="flex flex-col gap-6">
           <div className="flex flex-wrap gap-2">
@@ -229,14 +233,14 @@ const CategoryChip = ({
 
   const budgetColour =
     !budget || budget > 0
-      ? "bg-success-200 dark:bg-success"
+      ? "bg-success text-white"
       : percentOfBudget > 1
-        ? "bg-danger-200 dark:bg-danger"
-        : "bg-secondary-200 dark:bg-secondary";
+        ? "bg-danger text-white"
+        : "bg-secondary text-white";
 
   const pillColour =
     category === "total" && budget === undefined && total < 0
-      ? "bg-danger"
+      ? "bg-danger text-white"
       : "bg-default";
 
   const CategoryIcon =
@@ -253,13 +257,21 @@ const CategoryChip = ({
           className={`duration-25 relative z-10 flex h-7 items-center rounded-full ${pillColour} px-3 text-xs text-foreground transition-colors-opacity sm:hover:opacity-80 ${filterBy && searchParamKey !== filterBy ? "opacity-50" : ""}`}
         >
           <div
-            className={`absolute bottom-full left-0 top-0 -z-10 overflow-visible rounded-l-full ${percentOfBudget >= 0.9 ? "rounded-r-full" : ""} ${budgetColour}`}
+            className={`absolute bottom-full left-0 top-0 flex items-center overflow-visible rounded-l-full ${percentOfBudget >= 0.9 ? "rounded-r-full" : ""} ${budgetColour}`}
             style={{
               width: `${Math.min(percentOfBudget * 100, 100)}%`,
               minWidth: percentOfBudget !== 0 ? "10px" : undefined,
               height: "100%",
+              overflow: "hidden",
             }}
-          ></div>
+          >
+            <div className="box-border flex items-center gap-2 overflow-hidden whitespace-nowrap px-3 capitalize">
+              <span className="items-center">
+                {CategoryIcon ? <CategoryIcon size="16" /> : categoryName}
+              </span>
+              <span className="flex items-center">{totalString}</span>
+            </div>
+          </div>
           <div className="flex items-center gap-2 capitalize">
             <span className="items-center">
               {CategoryIcon ? <CategoryIcon size="16" /> : categoryName}

@@ -41,7 +41,7 @@ export const Balance = async ({
     }, balancePennies + totals.upcoming) / 100;
 
   return (
-    <div className="flex items-center justify-between p-2 pt-4">
+    <div className="flex items-center justify-between p-2 pt-4 text-white">
       <BalanceDisplay amount={balancePennies / 100} label="Balance" />
       {balanceAfterBudget && offset === 0 && (
         <BalanceDisplay amount={balanceAfterBudget} label="After Budget" />
@@ -57,13 +57,9 @@ const BalanceDisplay = ({
   amount: number;
   label: string;
 }) => (
-  <div className="flex gap-2 font-bold">
-    <span>{label}:</span>
-    <span
-      className={
-        amount >= 0 ? "text-blue-600 dark:text-blue-400" : "text-danger"
-      }
-    >
+  <div className="flex flex-col items-center text-xl font-bold">
+    <span className="text-xs font-semibold">{label}</span>
+    <span className={amount >= 0 ? "text-blue-200" : "text-red-200"}>
       {formatAsGBP(amount)}
     </span>
   </div>
