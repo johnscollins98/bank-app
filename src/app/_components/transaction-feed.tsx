@@ -4,7 +4,7 @@ import { formatAsGBP } from "@/lib/currency-format";
 import { orderCategoriesByPopularity } from "@/lib/ordered-categories";
 import { Transactions } from "@/lib/starling-types";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { categorySchema } from "./categories";
 import FeedEntry from "./feed-entry";
 
@@ -22,9 +22,13 @@ export const TransactionFeed = ({ feedItems }: Props) => {
   const category =
     categorySchema.safeParse(searchParams.get("filterBy")).data ?? null;
 
-  const filteredItems = category
-    ? feedItems.filter((i) => i.spendingCategory === category)
-    : feedItems;
+  const filteredItems = useMemo(
+    () =>
+      category
+        ? feedItems.filter((i) => i.spendingCategory === category)
+        : feedItems,
+    [feedItems, category],
+  );
 
   const [groupedByDay, setGroupedByDay] = useState<FeedItemGroups>({});
 
