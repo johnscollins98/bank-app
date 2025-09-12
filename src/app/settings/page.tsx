@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   return (
     <div>
       {/* TODO - this should really be in a layout */}
-      <div className="pt-safe pl-safe pr-safe bg-gradient-to-b from-cyan-600 to-cyan-800 pb-4 shadow-md">
+      <div className="pt-safe pl-safe pr-safe bg-gradient-to-br from-pink-600 to-purple-800 pb-4 shadow-md">
         <LogoutForm />
       </div>
       <div className="pl-safe pr-safe pb-safe pt-4">
