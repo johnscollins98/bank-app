@@ -8,6 +8,7 @@ import {
 import setUserSettings from "@/lib/actions/user-settings/set-user-settings";
 import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { MonthBarrierOption } from "@prisma/client";
+import { useTheme } from "next-themes";
 import {
   FormEventHandler,
   startTransition,
@@ -65,6 +66,12 @@ export const SettingsForm = ({
     });
   };
 
+  const { theme, setTheme } = useTheme();
+  const [themeState, setThemState] = useState("");
+  useEffect(() => {
+    setThemState(theme ?? "system");
+  }, [theme]);
+
   return (
     <form onSubmit={onSubmitHandler} className="flex flex-col gap-5">
       <div className="text-xl font-semibold">Please enter your settings</div>
@@ -112,6 +119,17 @@ export const SettingsForm = ({
           <SelectItem key="7">Sunday</SelectItem>
         </Select>
       )}
+      <Select
+        label="Theme"
+        selectedKeys={themeState ? [themeState] : []}
+        onChange={(e) => setTheme(e.target.value)}
+        isLoading={!themeState}
+        suppressHydrationWarning
+      >
+        <SelectItem key="system">System</SelectItem>
+        <SelectItem key="dark">Dark</SelectItem>
+        <SelectItem key="light">Light</SelectItem>
+      </Select>
       <div className="flex items-center gap-3">
         <ButtonLink href="/" prefetch className="flex w-32 gap-2">
           <CgArrowLeft />

@@ -3,13 +3,15 @@
 import { Button, Spinner, Tooltip } from "@heroui/react";
 import { signOut } from "next-auth/react";
 import { startTransition, useOptimistic } from "react";
-import { MdLogout, MdSettings } from "react-icons/md";
+import { MdHome, MdLogout, MdSettings } from "react-icons/md";
 import { ButtonLink } from "./button-link";
 
 export default function LogoutForm({
   showSettings = false,
+  showHome = false,
 }: {
   showSettings?: boolean;
+  showHome?: boolean;
 }) {
   const [loggingOut, setLoggingOut] = useOptimistic(false);
   const logoutHandler = () => {
@@ -21,6 +23,19 @@ export default function LogoutForm({
 
   return (
     <div className="flex gap-2">
+      {showHome && (
+        <Tooltip content="Home">
+          <ButtonLink
+            href="/"
+            size="sm"
+            className="min-w-0"
+            prefetch
+            aria-label="Home"
+          >
+            <MdHome />
+          </ButtonLink>
+        </Tooltip>
+      )}
       {showSettings && (
         <Tooltip content="Settings">
           <ButtonLink

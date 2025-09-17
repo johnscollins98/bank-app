@@ -4,10 +4,11 @@ import { useTheme } from "next-themes";
 import { PropsWithChildren } from "react";
 
 export const Theme = ({ children }: PropsWithChildren) => {
-  const { systemTheme } = useTheme();
+  const { theme } = useTheme();
+
   return (
     <div
-      className={`${systemTheme} bg-background text-foreground`}
+      className={`${theme} bg-background text-foreground`}
       suppressHydrationWarning
     >
       {children}

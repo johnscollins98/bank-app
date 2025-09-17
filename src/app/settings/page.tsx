@@ -11,7 +11,7 @@ export default async function SettingsPage() {
     <div>
       {/* TODO - this should really be in a layout */}
       <div className="pt-safe pl-safe pr-safe bg-gradient-to-br from-pink-600 to-purple-800 pb-4 shadow-md">
-        <LogoutForm />
+        <LogoutForm showHome />
       </div>
       <div className="pl-safe pr-safe pb-safe pt-4">
         <SettingsForm userSettings={settings} />
