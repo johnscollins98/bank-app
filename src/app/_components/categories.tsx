@@ -49,10 +49,10 @@ export default function Categories({ totals, budgets, startDate }: Props) {
     <Accordion>
       <AccordionItem
         title="Spending Summary"
-        className="text-background dark:text-foreground"
+        className="text-white"
         classNames={{
-          indicator: "text-background dark:text-foreground",
-          title: "text-background dark:text-foreground",
+          indicator: "text-white",
+          title: "text-white",
         }}
       >
         <div className="flex flex-col gap-6">
@@ -163,11 +163,7 @@ const BudgetPercentBar = ({
   label: string;
 }) => {
   const percentColor =
-    budget > 0
-      ? "dark:bg-success bg-success-200"
-      : budget > amount
-        ? "dark:bg-danger bg-danger-200"
-        : "dark:bg-secondary bg-secondary-200";
+    budget > 0 ? "bg-success" : budget > amount ? "bg-danger" : "bg-secondary";
 
   const absoluteAmountString = formatAsGBP(Math.abs(amount));
 
@@ -185,6 +181,7 @@ const BudgetPercentBar = ({
       })}
       classNames={{
         indicator: percentColor,
+        track: "bg-default/70",
         label: "capitalize",
       }}
       showValueLabel
