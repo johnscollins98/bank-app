@@ -9,7 +9,7 @@ import getUserAccount from "@/lib/user";
 import { Balance } from "./_components/balance";
 import Categories from "./_components/categories";
 import { DateNavigation } from "./_components/date-navigation";
-import LogoutForm from "./_components/logout-form";
+import Navbar from "./_components/navbar";
 import { TransactionFeed } from "./_components/transaction-feed";
 
 const getDates = async (offsetStr?: string) => {
@@ -92,18 +92,16 @@ export default async function Home(props: {
 
   return (
     <main className="flex min-h-dvh flex-col gap-4">
-      <div className="pt-safe pl-safe pr-safe bg-gradient-to-br from-pink-600 to-purple-800 pb-4 shadow-md">
-        <div className="flex justify-between">
-          <LogoutForm showSettings />
-          <DateNavigation dates={datesPromise} />
-        </div>
-        <Balance
-          totals={totals}
-          budgets={budgets}
-          offset={parseInt(offset ?? "0")}
-        />
-        <Categories budgets={budgets} startDate={start} totals={totals} />
-      </div>
+      <Navbar showSettings rhs={<DateNavigation dates={datesPromise} />}>
+        <>
+          <Balance
+            totals={totals}
+            budgets={budgets}
+            offset={parseInt(offset ?? "0")}
+          />
+          <Categories budgets={budgets} startDate={start} totals={totals} />
+        </>
+      </Navbar>
       <div className="pl-safe pr-safe pb-safe flex flex-grow flex-col">
         <TransactionFeed feedItems={feedItems} />
       </div>
