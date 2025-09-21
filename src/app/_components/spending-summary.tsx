@@ -173,20 +173,33 @@ const BudgetPercentBar = ({
   const percentColor =
     budget > 0 ? "bg-success" : budget > amount ? "bg-danger" : "bg-secondary";
 
-  const absoluteAmountString = formatAsGBP(Math.abs(amount));
+  const amountString = formatAsGBP(amount);
 
-  const absoluteBudgetString = formatAsGBP(Math.abs(budget));
+  const budgetString = formatAsGBP(budget);
 
-  const percentLabel = `${label} - ${absoluteAmountString} / ${absoluteBudgetString}`;
+  const barLabel = <div>{label}</div>;
+
+  const valueLabel = (
+    <div className="flex gap-2">
+      <div>
+        {amountString} / {budgetString}
+      </div>
+      <div className="font-bold">
+        (
+        {Math.max(0, amount / budget).toLocaleString(undefined, {
+          style: "percent",
+        })}
+        )
+      </div>
+    </div>
+  );
 
   return (
     <Progress
-      value={Math.abs(amount)}
-      maxValue={Math.abs(budget)}
-      label={percentLabel}
-      valueLabel={(amount / budget).toLocaleString(undefined, {
-        style: "percent",
-      })}
+      value={amount}
+      maxValue={budget}
+      label={barLabel}
+      valueLabel={valueLabel}
       classNames={{
         indicator: percentColor,
         track: "bg-default/70",
@@ -215,22 +228,24 @@ const CategoryChip = ({
 
   const searchParamKey = category === "total" ? "" : category;
 
-  const percentOfBudget = budget ? total / budget : 0;
+  const percentOfBudget = budget
+    ? total / budget < 0
+      ? 0
+      : total / budget
+    : 0;
 
   const totalString = formatAsGBP(total);
 
-  const absoluteTotalString = formatAsGBP(Math.abs(total));
-
-  const absoluteBudgetString = budget && formatAsGBP(Math.abs(budget));
+  const budgetString = budget && formatAsGBP(budget);
 
   const categoryName = category.replaceAll("_", " ").toLocaleLowerCase();
   const tooltipString = (
     <div className="flex flex-col items-center gap-2">
       <div className="capitalize">{categoryName}</div>
       <div>
-        {absoluteTotalString}
+        {totalString}
         {budget
-          ? ` / ${absoluteBudgetString} (${percentOfBudget.toLocaleString(undefined, { style: "percent" })})`
+          ? ` / ${budgetString} (${percentOfBudget.toLocaleString(undefined, { style: "percent" })})`
           : ""}
       </div>
     </div>

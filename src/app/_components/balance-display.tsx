@@ -17,7 +17,7 @@ export const BalanceDisplay = ({
       <div className="flex flex-col items-center text-xl font-bold">
         <span className="text-xs font-semibold">{label}</span>
         <span className={amount >= 0 ? "text-blue-200" : "text-red-200"}>
-          {formatAsGBP(amount)}
+          {formatAsGBP(amount, false, true)}
         </span>
       </div>
     </Tooltip>

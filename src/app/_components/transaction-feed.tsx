@@ -72,10 +72,7 @@ export const TransactionFeed = ({ feedItems }: Props) => {
         <div key={title}>
           <div className="flex items-center justify-between px-1 py-2 text-sm text-foreground-600">
             {title}
-            <div>
-              {total < 0 && "+ "}
-              {formatAsGBP(Math.abs(total))}
-            </div>
+            <div>{formatAsGBP(Math.abs(total))}</div>
           </div>
           <div className="flex flex-1 flex-col rounded-md bg-foreground-100">
             {items.map((feedItem) => (

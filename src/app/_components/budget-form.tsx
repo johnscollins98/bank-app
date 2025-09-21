@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/modal";
+import { Select, SelectItem } from "@heroui/react";
 import { Budget } from "@prisma/client";
 import {
   FormEventHandler,
@@ -47,12 +48,17 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
 
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [removeWarningOpen, setRemoveWarningOpen] = useState(false);
-  const [amount, setAmount] = useState(existingBudget?.amount.toString() ?? "");
+  const [amount, setAmount] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [singleMonthOnly, setSingleMonthOnly] = useState(false);
 
+  const [direction, setDirection] = useState("expense");
+
   useEffect(() => {
-    setAmount(existingBudget?.amount.toString() ?? "");
+    setAmount(
+      existingBudget?.amount ? Math.abs(existingBudget.amount).toString() : "",
+    );
+    setDirection((existingBudget?.amount ?? 0) > 0 ? "income" : "expense");
   }, [existingBudget]);
 
   useEffect(() => {
@@ -65,8 +71,9 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
 
     startTransition(async () => {
       setSubmitPending(true);
+      const multiplier = direction === "income" ? 1 : -1;
       await setBudget({
-        amount: parseFloat(amount),
+        amount: parseFloat(amount) * multiplier,
         category: selectedCategory,
         date: singleMonthOnly ? startDate : undefined,
       });
@@ -144,13 +151,31 @@ export const BudgetForm = ({ budgets, filterBy, startDate }: Props) => {
                   <Input
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    type="number"
                     isRequired
                     required
+                    validate={(v) => {
+                      const vFloat = parseFloat(v);
+                      if (isNaN(vFloat)) {
+                        return "Must be a number.";
+                      }
+                      if (parseFloat(v) <= 0) {
+                        return "Must be a positive number.";
+                      }
+                    }}
                     size="lg"
                     label="Amount"
                   />
                 </div>
+                <Select
+                  label="Direction"
+                  selectedKeys={[direction]}
+                  onChange={(e) => setDirection(e.target.value)}
+                  required
+                  isRequired
+                >
+                  <SelectItem key="income">Income</SelectItem>
+                  <SelectItem key="expense">Expense</SelectItem>
+                </Select>
                 <Autocomplete
                   label="Category"
                   required

@@ -51,8 +51,10 @@ export default function FeedEntry({ feedItem, orderedCategories }: Props) {
               "text-blue-600 dark:text-blue-400"
             }`}
           >
-            {optimisticFeedItem.direction === "IN" && "+"}
-            {formatAsGBP(optimisticFeedItem.amount.minorUnits / 100)}
+            {formatAsGBP(
+              (optimisticFeedItem.amount.minorUnits / 100) *
+                (optimisticFeedItem.direction === "IN" ? 1 : -1),
+            )}
           </div>
         </div>
         <div className="flex justify-between text-xs text-foreground-500">
