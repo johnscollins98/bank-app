@@ -13,6 +13,7 @@ import { Budget } from "@prisma/client";
 import { usePathname, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { BudgetForm } from "./budget-form";
+import { CashFlowOverview } from "./cash-flow-overview";
 
 export type SpendingCategoryWithTotal = SpendingCategory | "total";
 export type Totals<T extends string = SpendingCategoryWithTotal> = Record<
@@ -25,11 +26,17 @@ interface Props {
   totals: Totals<SpendingCategoryWithTotal>;
   budgets: BudgetsWithOverride;
   startDate: Date;
+  offset: number;
 }
 
 export const categorySchema = z.enum(SPENDING_CATEGORIES);
 
-export default function Categories({ totals, budgets, startDate }: Props) {
+export default function SpendingSummary({
+  totals,
+  budgets,
+  startDate,
+  offset,
+}: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const filterBy =
@@ -56,6 +63,7 @@ export default function Categories({ totals, budgets, startDate }: Props) {
         }}
       >
         <div className="flex flex-col gap-6">
+          <CashFlowOverview budgets={budgets} offset={offset} totals={totals} />
           <div className="flex flex-wrap gap-2">
             <CategoryChip
               totals={totals}
@@ -236,8 +244,10 @@ const CategoryChip = ({
         : "bg-secondary text-white";
 
   const pillColour =
-    category === "total" && budget === undefined && total < 0
-      ? "bg-danger text-white"
+    category === "total" && budget === undefined
+      ? total < 0
+        ? "bg-danger text-white"
+        : "bg-success text-white"
       : "bg-default";
 
   const CategoryIcon =

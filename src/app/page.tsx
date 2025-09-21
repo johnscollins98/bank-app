@@ -6,10 +6,10 @@ import {
 import { getUserSettingsCached } from "@/lib/queries/user-settings";
 import { SPENDING_CATEGORIES, SpendingCategory } from "@/lib/starling-types";
 import getUserAccount from "@/lib/user";
-import { Balance } from "./_components/balance";
-import Categories from "./_components/categories";
+import { BalanceOverview } from "./_components/balance-overview";
 import { DateNavigation } from "./_components/date-navigation";
 import Navbar from "./_components/navbar";
+import SpendingSummary from "./_components/spending-summary";
 import { TransactionFeed } from "./_components/transaction-feed";
 
 const getDates = async (offsetStr?: string) => {
@@ -90,17 +90,24 @@ export default async function Home(props: {
     >,
   );
 
+  const offsetNum = parseInt(offset ?? "0");
+
   return (
     <main className="flex min-h-dvh flex-col gap-4">
       <Navbar showSettings rhs={<DateNavigation dates={datesPromise} />}>
-        <>
-          <Balance
+        <div className="flex flex-col gap-2 pt-4">
+          <BalanceOverview
             totals={totals}
             budgets={budgets}
-            offset={parseInt(offset ?? "0")}
+            offset={offsetNum}
           />
-          <Categories budgets={budgets} startDate={start} totals={totals} />
-        </>
+          <SpendingSummary
+            budgets={budgets}
+            startDate={start}
+            totals={totals}
+            offset={offsetNum}
+          />
+        </div>
       </Navbar>
       <div className="pl-safe pr-safe pb-safe flex flex-grow flex-col">
         <TransactionFeed feedItems={feedItems} />

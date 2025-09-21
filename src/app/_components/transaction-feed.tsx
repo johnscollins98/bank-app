@@ -6,8 +6,8 @@ import { Transactions } from "@/lib/starling-types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { HiOutlineCash } from "react-icons/hi";
-import { categorySchema } from "./categories";
 import FeedEntry from "./feed-entry";
+import { categorySchema } from "./spending-summary";
 
 interface Props {
   feedItems: Transactions["feedItems"];
