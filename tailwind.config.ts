@@ -11,6 +11,7 @@ const config: Config = {
   theme: {
     extend: {},
   },
+  darkMode: "class",
   plugins: [heroui()],
 };
 export default config;
