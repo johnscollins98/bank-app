@@ -2,9 +2,9 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Bank App",
-    short_name: "Bank App",
-    description: "Bank App",
+    name: "Banko",
+    short_name: "Banko",
+    description: "Banko",
     start_url: "/",
     display: "standalone",
     theme_color: "#000",

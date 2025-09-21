@@ -5,7 +5,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Bank App",
+  title: "Banko",
   description: "Application to help budget with my bank",
   icons: "/icon.png",
 };

@@ -16,9 +16,11 @@ export default function Login() {
 
   return (
     <div className="flex h-lvh flex-1 flex-col items-center justify-center gap-10 bg-gradient-to-br from-pink-600 to-purple-800 pb-4">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col items-center gap-3">
         <Image src="/icon.png" alt="icon" width={150} height={150} />
-        <div className="text-4xl font-bold text-blue-100">Bank App</div>
+        <div className="flex justify-center text-center text-7xl font-bold text-blue-100">
+          Banko
+        </div>
       </div>
       <Button
         onPress={signInHandler}
