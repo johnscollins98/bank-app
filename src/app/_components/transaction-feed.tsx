@@ -74,7 +74,7 @@ export const TransactionFeed = ({ feedItems }: Props) => {
             {title}
             <div>{formatAsGBP(Math.abs(total))}</div>
           </div>
-          <div className="flex flex-1 flex-col rounded-md bg-foreground-100">
+          <div className="flex flex-1 flex-col rounded-md bg-white dark:bg-foreground-100">
             {items.map((feedItem) => (
               <FeedEntry
                 key={feedItem.feedItemUid}

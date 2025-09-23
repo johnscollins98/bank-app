@@ -93,7 +93,7 @@ export default async function Home(props: {
   const offsetNum = parseInt(offset ?? "0");
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4">
+    <main className="flex min-h-dvh flex-col">
       <Navbar showSettings rhs={<DateNavigation dates={datesPromise} />}>
         <div className="flex flex-col gap-2 pt-4">
           <BalanceOverview
@@ -109,7 +109,7 @@ export default async function Home(props: {
           />
         </div>
       </Navbar>
-      <div className="pl-safe pr-safe pb-safe flex flex-grow flex-col">
+      <div className="pl-safe pr-safe pb-safe flex flex-grow flex-col bg-foreground-100 pt-4 dark:bg-background">
         <TransactionFeed feedItems={feedItems} />
       </div>
     </main>
